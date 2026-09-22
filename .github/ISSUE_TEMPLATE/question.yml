@@ -1,0 +1,15 @@
+name: Documentation or product question
+description: Ask about documented Yggaro Lite Server behaviour
+title: "[Question]: "
+labels: [question]
+body:
+  - type: markdown
+    attributes:
+      value: "For hosted service, licensing or paid support, use info@yggarolite.cz. Security reports belong at security@yggnet.cz."
+  - type: textarea
+    id: question
+    attributes: {label: Question, description: "What are you trying to achieve, and which documentation did you read?"}
+    validations: {required: true}
+  - type: input
+    id: version
+    attributes: {label: Version, description: "If relevant"}

@@ -1,0 +1,6 @@
+name: Security vulnerability
+description: Do not disclose vulnerabilities publicly
+body:
+  - type: markdown
+    attributes:
+      value: "Stop here. Do not submit a public issue. Follow SECURITY.md and email security@yggnet.cz. Remove secrets and personal/customer data from the report."
