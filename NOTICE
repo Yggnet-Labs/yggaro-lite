@@ -7,5 +7,8 @@ source-available and is not OSI-approved open source during the FSL period.
 See LICENSE for the complete terms; the licence text governs.
 
 Yggaro, Yggaro Lite and Yggnet Labs names and marks are not licensed except
-as necessary to identify the origin of the software. Third-party components
-retain their own copyright and licence notices.
+as necessary to identify the origin of the software.
+
+Third-party components are listed in THIRD-PARTY-NOTICES.md, with the full
+licence text of each. The same file is attached to every release and is built
+into the binary: run `yggaro-server -third-party-notices` to print it.
