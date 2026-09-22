@@ -6,6 +6,10 @@ Yggaro Lite keeps client work, decisions, risks and deliverables in one place so
 
 This repository contains the **server edition**. One instance serves one organisation, with its own database on its own machine. Run it yourself or use the hosted service at [yggarolite.cz](https://yggarolite.cz).
 
+![Yggaro Lite — overview of orders and projects](docs/assets/overview-en.png)
+
+*Try it without installing anything: [ukazka-en.yggarolite.cz](https://ukazka-en.yggarolite.cz) — a read-only demo with invented data. Sign in as `demo@yggarolite.cz` / `UkazkaYggaro2026`.*
+
 > **Product scope:** Yggaro Lite Server is approaching its first production release, `1.0.0`. Mesh (peer-to-peer desktop/LAN edition) and Lite AI (AI inside the application) are separate, deferred products. No release date is promised for either.
 
 ## Why teams use it
@@ -14,6 +18,17 @@ This repository contains the **server edition**. One instance serves one organis
 - decisions and changes remain attributable instead of disappearing in chat;
 - each organisation has an isolated instance and can export its data;
 - a customer's own AI client can connect through the guarded MCP interface; Yggaro Lite does not send application data to a model by itself.
+
+## What it looks like
+
+| | |
+|---|---|
+| ![Order detail with milestones and gates](docs/assets/order-en.png) | ![Risk register](docs/assets/risks-en.png) |
+| **Order detail** — milestones, gates and what is waiting on whom | **Risks** — scored, owned, and attached to the work they threaten |
+| ![Portfolio](docs/assets/portfolio-en.png) | ![Dark theme](docs/assets/overview-en-dark.png) |
+| **Portfolio** — every engagement on one screen | Light and dark, six interface languages |
+
+Screenshots are from the public demo, with invented data.
 
 ## Self-host in brief
 

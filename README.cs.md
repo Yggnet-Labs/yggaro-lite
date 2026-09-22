@@ -6,6 +6,10 @@ Yggaro Lite drží práci pro zákazníky, rozhodnutí, rizika a výstupy na jed
 
 Tento repozitář obsahuje **serverovou edici**. Jedna instance slouží jedné organizaci, má vlastní databázi a běží na vlastním stroji. Můžete ji provozovat sami nebo využít naši službu na [yggarolite.cz](https://yggarolite.cz).
 
+![Yggaro Lite — přehled zakázek a projektů](docs/assets/overview-cs.png)
+
+*Vyzkoušejte si to bez instalace: [ukazka.yggarolite.cz](https://ukazka.yggarolite.cz) — ukázka jen ke čtení, s vymyšlenými daty. Přihlášení `ukazka@yggarolite.cz` / `UkazkaYggaro2026`.*
+
 > **Rozsah produktu:** Yggaro Lite Server směřuje k první produkční verzi `1.0.0`. Mesh (peer-to-peer edice pro desktop/LAN) a Lite AI (AI uvnitř aplikace) jsou jiné, odložené produkty. U žádného neslibujeme termín.
 
 ## Proč ho týmy používají
@@ -14,6 +18,17 @@ Tento repozitář obsahuje **serverovou edici**. Jedna instance slouží jedné 
 - rozhodnutí a změny zůstávají dohledatelné místo toho, aby zmizely v chatu;
 - každá organizace má oddělenou instanci a může svá data exportovat;
 - zákazník může připojit vlastního AI klienta přes hlídané MCP; Yggaro Lite sám data aplikace žádnému modelu neposílá.
+
+## Jak to vypadá
+
+| | |
+|---|---|
+| ![Detail zakázky s milníky a branami](docs/assets/order-cs.png) | ![Registr rizik](docs/assets/risks-cs.png) |
+| **Detail zakázky** — milníky, brány a co na kom čeká | **Rizika** — obodovaná, s vlastníkem, u práce, kterou ohrožují |
+| ![Portfolio](docs/assets/portfolio-cs.png) | ![Tmavý motiv](docs/assets/overview-en-dark.png) |
+| **Portfolio** — všechny zakázky na jedné obrazovce | Světlý i tmavý motiv, šest jazyků rozhraní |
+
+Snímky jsou z veřejné ukázky, data jsou vymyšlená.
 
 ## Self-host stručně
 
