@@ -4,6 +4,8 @@
 
 MCP lets a customer's own AI client work with Yggaro Lite. It is not “AI inside Yggaro Lite”: no model is bundled and the server does not choose a model or send data to one by itself.
 
+**It is entirely optional and off by default.** Yggaro Lite is fully functional without any AI: nothing here is required to run the product, and leaving MCP off costs you no other feature. It stays off until an operator explicitly switches it on.
+
 ## Enable the endpoint
 
 Add `YGGARO_MCP=1` to the service environment and restart. The Streamable HTTP endpoint is `https://your-domain.example/mcp`. Built-in OAuth is opt-in with `YGGARO_MCP_OAUTH=1`; otherwise issue an opaque bearer mandate locally:
