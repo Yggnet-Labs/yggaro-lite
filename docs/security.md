@@ -5,7 +5,7 @@
 One server instance belongs to one organisation. The OS administrator, DNS/TLS control and database passphrase are trusted. Users are limited by role and project membership. An MCP client acts as a mapped application principal and cannot exceed that principal's RBAC rights.
 
 - TLS terminates in built-in ACME or an explicitly configured reverse proxy.
-- Database values are encrypted at rest; key material lives outside the data directory. Attachments and operational metadata still require filesystem/disk protection.
+- Database content **and attachment contents** are encrypted at rest under the same key; key material lives outside the data directory. Record identifiers and replication metadata stay readable so that indexing works, so filesystem and disk protection remain part of the picture rather than a substitute for it. See [data and privacy](data-and-privacy.md).
 - Secrets belong in a root-readable environment file or secret manager, never Git, issues or logs.
 - First administrator creation requires a bootstrap token.
 
