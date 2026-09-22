@@ -7,7 +7,6 @@ Every release carries enough material to answer three questions before you run a
 | File | What it is |
 |---|---|
 | `yggaro-server-linux-amd64` | the server binary — the supported target for 1.0.0 |
-| `yggaro-server-linux-arm64` | the same build for arm64, provided but not a supported platform for 1.0.0 |
 | `SHA256SUMS` | checksums covering every file below |
 | `PROVENANCE.json` | what was built, from which commit and tag |
 | `SBOM.cdx.json` | the dependency inventory, CycloneDX 1.6 |
@@ -19,7 +18,7 @@ Every release carries enough material to answer three questions before you run a
 sha256sum -c --ignore-missing SHA256SUMS
 ```
 
-`--ignore-missing` matters: `SHA256SUMS` covers the whole release and you probably downloaded only the binary for your architecture. Without it you will see `No such file or directory` for the files you did not take, and that is not a failure.
+`--ignore-missing` matters: `SHA256SUMS` covers the whole release and you probably downloaded only the binary, not the provenance and SBOM alongside it. Without it you will see `No such file or directory` for the files you did not take, and that is not a failure.
 
 Then confirm the binary agrees:
 
@@ -68,7 +67,11 @@ An SBOM tells you what was included on the day it was built. It does not stay tr
 
 ## What we do not claim
 
-There is no code signature on the binaries for this edition yet, and no external penetration test or formal certification. Where that matters to you, say so — it helps us order the work.
+There is no code signature on the binaries for this edition yet, and no external penetration test or formal certification.
+
+**1.0.0 ships `linux/amd64` only.** We build arm64 internally, but we do not publish it: an artifact named like the others implies a level of support we cannot honour yet, and a sentence in the documentation is weaker than the expectation the file itself creates. If you need arm64, tell us — knowing that someone actually wants it is what would move it up the list.
+
+Where any of this matters to you, say so; it helps us order the work.
 
 ## Related
 
