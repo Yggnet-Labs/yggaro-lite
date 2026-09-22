@@ -4,6 +4,8 @@
 
 MCP dovolí vlastnímu AI klientovi zákazníka pracovat s Yggaro Lite. Není to „AI uvnitř Yggaro Lite“: žádný model není součástí produktu a server sám data modelu neposílá.
 
+**Je to zcela volitelné a ve výchozím stavu vypnuté.** Yggaro Lite funguje naplno i bez jakékoli AI: nic z toho, co je tady popsané, není k provozu produktu potřeba a tím, že MCP nezapnete, nepřijdete o žádnou jinou funkci. Zůstane vypnuté, dokud ho správce výslovně nezapne.
+
 ## Zapnutí endpointu
 
 Přidejte `YGGARO_MCP=1` do prostředí služby a restartujte ji. Streamable HTTP endpoint je `https://vase-domena.cz/mcp`. Vestavěné OAuth je volitelné přes `YGGARO_MCP_OAUTH=1`; jinak vydejte opaque bearer mandát lokálně:

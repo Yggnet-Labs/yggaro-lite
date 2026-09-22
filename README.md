@@ -17,7 +17,7 @@ This repository contains the **server edition**. One instance serves one organis
 - work is organised around projects, milestones, gates, risks and accepted deliverables;
 - decisions and changes remain attributable instead of disappearing in chat;
 - each organisation has an isolated instance and can export its data;
-- a customer's own AI client can connect through the guarded MCP interface; Yggaro Lite does not send application data to a model by itself.
+- a customer's own AI client can connect through the guarded MCP interface — **entirely optional and off by default**; Yggaro Lite runs fully without any AI and does not send application data to a model by itself.
 
 ## What it looks like
 
