@@ -28,11 +28,15 @@ Nenasazujte náhodnou větev ani automatický zdrojový archiv GitHubu. Po vydá
 
 ## Dokumentace
 
-- [Instalace](docs/install.cs.md) · [Konfigurace](docs/configuration.md)
-- [Záloha a obnova](docs/backup-restore.md) · [Aktualizace](docs/upgrade.md)
-- [Bezpečnostní model](docs/security.cs.md) · [Hlášení zranitelností](SECURITY.md)
-- [MCP pro AI klienta zákazníka](docs/mcp.cs.md) · [Oprávnění MCP](docs/mcp-permissions.cs.md)
-- [FAQ](docs/faq.cs.md) · [Podpora](SUPPORT.md) · [Verzování](VERSIONING.md)
+**Rozjet** — [Instalace](docs/install.cs.md) · [Konfigurace](docs/configuration.md) · [Architektura](docs/architecture.md)
+
+**Provozovat** — [Provoz](docs/operations.md) · [Záloha a obnova](docs/backup-restore.md) · [Aktualizace](docs/upgrade.md) · [Když něco nejde](docs/troubleshooting.cs.md)
+
+**Důvěřovat** — [Bezpečnostní model](docs/security.cs.md) · [Data a soukromí](docs/data-and-privacy.cs.md) · [Ověření vydání](docs/release-verification.md) · [Hlášení zranitelností](SECURITY.md)
+
+**Připojit vlastní AI** — [MCP](docs/mcp.cs.md) · [Oprávnění](docs/mcp-permissions.cs.md) · [Nástroje a jejich meze](docs/mcp-tools.cs.md) · [Roadmapa](docs/mcp-roadmap.cs.md)
+
+**Ostatní** — [FAQ](docs/faq.cs.md) · [Podpora](SUPPORT.md) · [Verzování](VERSIONING.md) · [Pravidla chování](CODE_OF_CONDUCT.md)
 
 ## Licence
 
@@ -40,11 +44,6 @@ Yggaro Lite je **source-available, nikoli OSI open source**, pod FSL-1.1-ALv2. V
 
 ## Vývoj
 
-```bash
-./tools/dev-setup.sh
-go test ./... -race
-go vet ./...
-./tools/build.sh
-```
+Zdrojový strom zatím v tomhle repozitáři není — najdete tu dokumentaci a vydání. Než přibude, jsou issues a dotazy vítané, ale pull request nemá co přeložit.
 
-Před pull requestem čtěte [CONTRIBUTING.md](CONTRIBUTING.md). Zranitelnosti hlaste soukromě podle [SECURITY.md](SECURITY.md).
+Jak budeme příspěvky přijímat, popisuje [CONTRIBUTING.md](CONTRIBUTING.md). Zranitelnosti hlaste soukromě podle [SECURITY.md](SECURITY.md).

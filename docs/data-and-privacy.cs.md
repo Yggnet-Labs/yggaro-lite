@@ -1,0 +1,81 @@
+# Data a soukromí
+
+[English](data-and-privacy.md) · [Čeština](data-and-privacy.cs.md)
+
+Tahle stránka odpovídá na to, co se u zákazníka ptá IT a právní oddělení jako první: **kde naše data leží, kdo se k nim dostane a jak je dostaneme zpátky ven.** Popisuje self-hostovanou serverovou edici. U hostované služby viz [yggarolite.cz](https://yggarolite.cz).
+
+## Kde data leží
+
+Všechno, co aplikace ukládá, je na vašem stroji:
+
+| Co | Kde |
+|---|---|
+| Databáze (SQLite) | `<data>/yggaro.db`, výchozí `/var/lib/yggaro` |
+| Přílohy | `<data>/files/` |
+| Klíčový materiál | `YGGARO_KEYS`, výchozí `/var/lib/yggaro-keys` — mimo datový strom |
+| Certifikáty TLS | `<data>/acme/` při vestavěném ACME |
+
+Žádná externí databáze, žádná fronta, žádná cache, kterou byste museli provozovat. Binárka je čistě v Go včetně SQLite driveru, takže vedle ní není co instalovat.
+
+## Co je šifrované v klidu
+
+S nastaveným `YGGARO_DB_PASSPHRASE` — což je požadavek pro ostrý provoz — je obsah šifrovaný algoritmem **XChaCha20-Poly1305** klíčem, který leží v adresáři klíčů a odemyká ho heslo:
+
+- **obsah** — hodnoty záznamů a dokumenty, tedy vaše projekty, zakázky, rizika a rozhodnutí;
+- **obsah příloh**, týmž klíčem;
+- **uložená tajemství**, například organizační klíč a nastavené adresy webhooků.
+
+V ukradeném souboru databáze naopak čitelné zůstávají — kvůli indexům a replikaci: identifikátory záznamů, názvy entit, cesty a metadata o zařízení a čase. Jinak řečeno: kdo má jen soubor, zjistí, *že* záznamy existují a kolik jich je. Ne co je v nich.
+
+Když klíč k datům nesedí, server **odmítne nastartovat**, místo aby přepsal data, která neumí přečíst.
+
+Plynou z toho dvě povinnosti provozovatele: chránit disk a adresář klíčů běžnými právy souborového systému a **mít kopii hesla mimo server**. Bez něj jsou zálohy trvale nečitelné — o to v tom šifrování jde a platí to i na vás.
+
+## Co odchází ze stroje
+
+Nic, dokud si to nenastavíte. **Produkt neobsahuje žádnou telemetrii, žádnou analytiku ani kontrolu aktualizací**; nikam se nehlásí a není volba, která by to zapnula.
+
+Odchozí spojení existují jen pro funkce, které si zapnete:
+
+| Kam | Kdy | Co odchází |
+|---|---|---|
+| Let's Encrypt | je zadaná `-domain` (vestavěné TLS) | jméno domény kvůli vydání certifikátu |
+| Váš webhook upozornění (Teams nebo kompatibilní) | správce uloží adresu webhooku | text upozornění |
+| Váš webhook na Discord | správce uloží adresu webhooku | text upozornění |
+| Microsoft Entra ID | je nastavená rodina `YGGARO_OIDC_*` | jen přihlášení |
+| Microsoft Graph / SharePoint | je nastavená rodina `YGGARO_GRAPH_*` (preview) | dokumenty, na které je integrace nastavená |
+
+**MCP je příchozí.** Váš vlastní AI klient se připojuje *k* instanci; instance nevolá žádného poskytovatele AI. Uvnitř téhle edice neběží žádný model a produkt sám do něj data neposílá. Co smí připojený klient číst nebo měnit, je dané právy principála, na kterého je namapovaný — viz [oprávnění MCP](mcp-permissions.cs.md).
+
+## Jak data dostanete ven
+
+Dvě cesty, jedna implementace, takže obě dají tentýž balík:
+
+```bash
+# Z aplikace, jako správce (co k tomu potřebuje, viz níže)
+# POST /api/admin/export
+
+# Nebo z příkazové řádky — tahle funguje i nad zastavenou instancí
+YGGARO_DB_PASSPHRASE='…' /opt/yggaro/yggaro-server \
+  -data /var/lib/yggaro -export /srv/export/yggaro-export.zip
+```
+
+V ZIPu je `data/<entita>.json` pro každou exportovanou entitu, `files/` s přílohami pod původními jmény a `manifest.json`, který přesně říká, co uvnitř je a kolik čeho. Je to obyčejný JSON: čitelný bez nás a bez tohohle softwaru.
+
+Cesta z aplikace je záměrně těžší než běžné čtení, protože jedním voláním odchází celý obsah firmy: chce správce, který navíc drží právo `data.export.full`, znovuzadání hesla a platnou hlavičku CSRF. Balík se sestaví z konzistentního snímku do dočasného souboru, ověří se úplnost, a teprve pak se pošle — useknutý export se nikdy neodešle jako úspěch. Souběžný export dostane `429`.
+
+Kdyby přílohy nešly přečíst, manifest to řekne a balík označí za neúplný, místo aby vypadal celý.
+
+## Mazání dat
+
+Jednotlivé záznamy se mažou v aplikaci. Když chcete pryč všechno, smažte datový adresář, adresář klíčů a zálohy — a zničte heslo. Protože je obsah šifrovaný tím klíčem, zničením klíče a jeho kopií se stane nečitelnou i kopie, na kterou jste zapomněli.
+
+Software sám od sebe nic nemaže ani nenechává propadnout. Retence je vaše politika a váš rozvrh.
+
+## Co vidíme my
+
+Nic. Tohle je software, který provozujete vy. K vaší instanci nemáme přístup, nic nám z ní nechodí a vaše heslo neumíme obnovit.
+
+## Související
+
+[Bezpečnostní model](security.cs.md) · [Konfigurace](configuration.md) · [Záloha a obnova](backup-restore.md) · [Oprávnění MCP](mcp-permissions.cs.md)
