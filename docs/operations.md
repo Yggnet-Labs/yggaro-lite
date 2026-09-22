@@ -46,7 +46,11 @@ If an administrator is locked out, recovery requires shell access to the machine
 
 ## Audit
 
-The application keeps an audit trail of who changed what, and a separate security log for disclosures through MCP. When you enable MCP or put the instance behind a proxy, check that the audit shows real client addresses rather than `127.0.0.1`; if it does not, the instance is not trusting your proxy yet.
+The application keeps an audit trail of who changed what, and alongside it a **security log** covering roughly a hundred kinds of event: sign-ins and every reason a sign-in was refused, role and permission changes, password resets and recovery codes, exports — including the ones that were denied or came out incomplete — file operations, OAuth client lifecycle and replay detection, notification configuration, and MCP mandates, disclosures and refusals.
+
+That log is **hash-chained**: each entry commits to the one before it, so a deleted or edited entry stops the chain verifying. `GET /api/seclog` returns the recent entries together with `intact`, `count` and `brokenSeq`, which is what to watch — an `intact` that turns false is a much stronger signal than anything in the entries themselves.
+
+When you enable MCP or put the instance behind a proxy, check that the log shows real client addresses rather than `127.0.0.1`; if it does not, the instance is not trusting your proxy yet.
 
 ## Secrets
 

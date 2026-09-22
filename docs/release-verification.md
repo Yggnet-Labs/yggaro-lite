@@ -52,9 +52,11 @@ For a genuine release, three fields must hold: `mode` is `release`, `cleanTree` 
 
 ## 3. Reproducibility
 
-Building the same commit twice produces **byte-identical artifacts** — both binaries and, because every timestamp and identifier is derived from the commit rather than from the clock, an identical `SHA256SUMS`. So the whole release can be checked by rebuilding and comparing one file.
+Building the same commit **with the same Go toolchain** produces byte-identical artifacts — both binaries and, because every timestamp and identifier is derived from the commit rather than from the clock, an identical `SHA256SUMS`. So a release can be checked by rebuilding and comparing one file.
 
-This is enforced, not hoped for: the release test suite builds twice with a delay and fails if anything differs. It is how we caught a build that embedded wall-clock time in three separate artifacts.
+The toolchain qualifier is not boilerplate. The compiler version affects the binary, and we do not pin the build environment beyond recording it: `PROVENANCE.json` names the exact `goVersion` used, and that is the one to rebuild with. A different Go version may well produce a different, equally valid binary.
+
+Within that scope it is enforced rather than hoped for: the release test suite builds twice with a delay and fails if anything differs. That test is how we found a build embedding wall-clock time in three separate artifacts — including the SBOM, which we would otherwise have missed.
 
 The source tree is not published in this repository yet, so today this property is something we verify and you can hold us to, rather than something you can re-run yourself. When the source is published, the rebuild is the check.
 
