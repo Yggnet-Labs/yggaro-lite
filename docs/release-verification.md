@@ -57,7 +57,7 @@ The toolchain qualifier is not boilerplate. The compiler version affects the bin
 
 Within that scope it is enforced rather than hoped for: the release test suite builds twice with a delay and fails if anything differs. That test is how we found a build embedding wall-clock time in three separate artifacts — including the SBOM, which we would otherwise have missed.
 
-The source tree is not published in this repository yet, so today this property is something we verify and you can hold us to, rather than something you can re-run yourself. When the source is published, the rebuild is the check.
+The application source is not published in this repository, so rebuilding it is not a check you can run from these files. What you can hold us to is the published checksum of the binary.
 
 ## 4. Dependencies
 

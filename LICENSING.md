@@ -29,31 +29,22 @@ Chceme, aby si kdokoli mohl **stáhnout serverovou binárku, přečíst dokument
 Nechceme, aby ho někdo vzal a prodával jako vlastní SaaS.
 
 Klasické open source licence to neumí oddělit: buď dovolí obojí, nebo nic.
-FSL to odděluje a přitom nedělá ze zdrojáku slepou uličku — časový převod na
-Apache-2.0 znamená, že text licence počítá s uvolněním po dvou letech.
-Balík, který si stáhnete dnes, zdrojový kód neobsahuje.
+FSL to odděluje v textu licence. Balík, který si stáhnete, zdrojový kód neobsahuje,
+takže z něj odvozené dílo neuděláte.
 
-Pro zákazníka je to podstatné: nekupujete si závislost, ze které není cesta ven.
+Pro zákazníka hostované služby je cesta ven export dat v rozsahu obchodních podmínek,
+ne převod licence na zdroj, který vydání neobsahuje.
 
 ## Kanonická verze × fork
 
-**Kanonická verze** je ta, kterou vydává Yggnet Labs (GitHub release, podepsané
-binárky). Jen ta dostává:
+**Kanonická verze** je ta, kterou vydává Yggnet Labs (GitHub release a binárka
+s kontrolními součty). Binárky tohoto vydání nejsou podepsané. Jen kanonická
+verze dostává bezpečnostní aktualizace, upgrade cestu a podporu. Serverová
+edice 1.0 federaci uzlů nemá.
 
-- bezpečnostní aktualizace a upgrade cestu,
-- podporu,
-- **účast ve federaci** — identita uzlu je vázaná na kanonickou verzi.
-
-**Fork** si udělat smíte (licence to dovoluje) a je to legitimní. Platí ale, že:
-
-- fork **není** kanonická verze a nesmí se za ni vydávat (viz odstavec o ochranných
-  známkách v licenci — jméno a značka Yggaro nejsou součástí grantu),
-- fork **nefederuje** s kanonickou sítí; federace stojí na identitě, a identitu
-  nelze udělit něčemu, co nikdo nevydal,
-- upgrade z forku zpět na kanonickou verzi není podporovaná cesta.
-
-Není to trest, je to důsledek. Federace znamená, že cizí uzel smí ovlivnit vaše
-data — a to jde jen tam, kde je jasné, co ten uzel provozuje.
+**Odvozené dílo ze zdrojového kódu** z tohoto repozitáře neuděláte, protože
+zdroj aplikace v něm není. Jméno a značka Yggaro se s binárkou nepřenášejí
+a nesmí se vydávat za kanonickou verzi.
 
 ## Co to znamená pro poskytovatele služeb
 

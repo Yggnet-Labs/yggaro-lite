@@ -4,7 +4,7 @@
 
 **Is this Mesh?** No. This release is the single-tenant server edition. Mesh is deferred.
 
-**Is it open source?** No. It is source-available under FSL-1.1-ALv2. Internal self-hosting is permitted; a competing hosted service is not.
+**Is it open source?** No. The server binary is under FSL-1.1-ALv2. The application source is not in this repository. Internal self-hosting of that binary is permitted; a competing hosted service is not.
 
 **Does it send data to AI?** No model runs inside this edition. You may connect your own AI client through MCP and explicitly grant limited access.
 

@@ -4,7 +4,7 @@
 
 **Je to Mesh?** Ne. Vydává se single-tenant serverová edice. Mesh je odložený.
 
-**Je to open source?** Ne. Produkt je source-available pod FSL-1.1-ALv2. Vlastní self-host je povolený, konkurenční hostovaná služba ne.
+**Je to open source?** Ne. Serverová binárka je pod FSL-1.1-ALv2. Zdroj aplikace v tomhle repozitáři není. Vlastní self-host té binárky je povolený, konkurenční hostovaná služba ne.
 
 **Posílá data do AI?** Uvnitř této edice neběží model. Vlastního AI klienta lze připojit přes MCP a výslovně mu udělit omezený přístup.
 

@@ -4,7 +4,7 @@
 
 Use GitHub Issues for reproducible bugs in the self-host server edition and questions about public documentation. Search existing issues first and remove secrets, personal data and customer content.
 
-For hosted service, licensing or paid support, contact [info@yggarolite.cz](mailto:info@yggarolite.cz). Commercial support is separate from the source-available licence; this repository does not promise an SLA or a response time for community issues.
+For hosted service, licensing or paid support, contact [info@yggarolite.cz](mailto:info@yggarolite.cz). Commercial support is separate from the binary licence; this repository does not promise an SLA or a response time for community issues.
 
 ## Security
 
