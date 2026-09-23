@@ -4,11 +4,17 @@
 
 Našli jste bezpečnostní chybu? **Nezakládejte veřejný issue.**
 
-Napište na **security@yggnet.cz**. Pokud můžete, přiložte:
+Napište na **[security@yggnet.cz](mailto:security@yggnet.cz)**. Do prvního
+hlášení patří popis dopadu a bezpečná reprodukce na syntetických datech.
+Neposílejte hesla, tokeny, privátní klíče, databáze ani zákaznické údaje.
+Pokud jsou pro ověření potřeba citlivé podklady, nejprve si s námi domluvte
+způsob jejich předání; běžný e-mail není příslib koncového šifrování.
+
+Pokud můžete, uveďte:
 
 - co jste udělali (kroky k reprodukci),
 - co jste čekali a co se stalo,
-- verzi (`yggaro-lite -version` — vypíše i commit a datum buildu),
+- verzi (`yggaro-server -version` (serverová edice) nebo `yggaro -version` (Mesh) — vypíše i commit a datum buildu),
 - edici (Mesh / serverová).
 
 **Co můžete čekat:**
@@ -25,6 +31,15 @@ Jsme malý tým. Neslibujeme reakci do hodin — slibujeme, že vám odpovíme
 **Prosba:** dejte nám čas na opravu, než to zveřejníte. Nemáme na to formální
 politiku ani odměny; spoléháme na slušnost a oplácíme ji tím, že vás uvedeme
 v poznámkách k vydání, pokud si to přejete.
+
+## Reporting in English
+
+Do not open a public issue for a vulnerability. Email
+[security@yggnet.cz](mailto:security@yggnet.cz) with the affected edition,
+version, impact and safe reproduction steps using synthetic data. Do not
+send passwords, tokens, private keys, databases or customer information.
+Agree on a transfer method with us before sharing sensitive evidence;
+ordinary email is not a promise of end-to-end encryption.
 
 ## Co je a co není zranitelnost
 

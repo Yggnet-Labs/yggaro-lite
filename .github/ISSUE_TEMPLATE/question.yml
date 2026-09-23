@@ -5,7 +5,7 @@ labels: [question]
 body:
   - type: markdown
     attributes:
-      value: "For hosted service, licensing or paid support, use info@yggarolite.cz. Security reports belong at security@yggnet.cz."
+      value: "For hosted service, licensing or paid support, use info@yggarolite.cz. This issue will be public: do not include secrets or customer data. For vulnerabilities follow https://github.com/Yggnet-Labs/yggaro-lite/security/policy."
   - type: textarea
     id: question
     attributes: {label: Question, description: "What are you trying to achieve, and which documentation did you read?"}

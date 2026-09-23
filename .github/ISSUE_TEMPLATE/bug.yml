@@ -5,7 +5,7 @@ labels: [bug]
 body:
   - type: markdown
     attributes:
-      value: "Do not include secrets, personal data or security vulnerabilities. Report vulnerabilities privately via SECURITY.md."
+      value: "Do not include secrets, personal data or security vulnerabilities. Report vulnerabilities privately: https://github.com/Yggnet-Labs/yggaro-lite/security/policy."
   - type: input
     id: version
     attributes: {label: Version, description: "Output of yggaro-server -version"}
