@@ -38,8 +38,8 @@ Pro zákazníka hostované služby je cesta ven export dat v rozsahu obchodních
 ## Kanonická verze × fork
 
 **Kanonická verze** je ta, kterou vydává Yggnet Labs (GitHub release a binárka
-s kontrolními součty `SHA256SUMS`, kterými ověříte pravost; kryptografický podpis
-binárek se nepoužívá). Jen kanonická verze dostává bezpečnostní aktualizace, upgrade
+s kontrolními součty `SHA256SUMS` pro ověření integrity stažených souborů;
+kryptografický podpis binárek se nepoužívá). Jen kanonická verze dostává bezpečnostní aktualizace, upgrade
 cestu a podporu. Serverová edice federaci uzlů nemá.
 
 Jméno a značka Yggaro se s binárkou nepřenášejí; upravenou nebo jinak odvozenou verzi
