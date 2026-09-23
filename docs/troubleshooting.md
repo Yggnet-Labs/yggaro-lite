@@ -26,23 +26,38 @@ Behind your own reverse proxy, do not use `-domain` at all — see below.
 
 ## The server will not start
 
+**`✗ Server odmítl start: …`, exit code 78** — the server refused its configuration before serving anything (from 1.0.2). The word after the colon names the rule; systemd leaves the service in `failed` and does not restart it:
+
+| Code in the message | Meaning | What to do |
+|---|---|---|
+| `no-db-passphrase` | `YGGARO_DB_PASSPHRASE` is not set | Set it in `/etc/yggaro-server.env`. **If the message names a key file, do not** — the instance was created without a passphrase; see [upgrade](upgrade.md#from-100-or-101-to-102) |
+| `no-bootstrap-token` | empty database and no `YGGARO_BOOTSTRAP_TOKEN` | set the token, restart, enter it in the setup wizard |
+| `passphrase-and-local-key` | both the passphrase and `YGGARO_ALLOW_LOCAL_KEY` are set | keep only the one your instance was created with |
+| `no-existing-local-key` | `YGGARO_ALLOW_LOCAL_KEY` is set but there is no key on this machine | the acknowledgement is only for an existing key; a new one is never created. Set a passphrase, or check `YGGARO_KEYS` |
+| `invalid-local-key` | the local key exists but is damaged or unreadable | nothing was overwritten. Restore the key directory from backup |
+| `no-encrypt-in-public-mode` | `-no-encrypt` together with a public setup | remove `-no-encrypt`; it is for local diagnostics only |
+
+`database-state-unknown` (exit code 1, restarted) means the server could not tell whether the instance already has an administrator. It will not guess; the rest of the line names the database error.
+
 **`✗ Chybný šifrovací klíč pro tuto databázi`** — the key does not open this database. The server stops on purpose instead of writing over data it cannot read. Check that `YGGARO_DB_PASSPHRASE` is the one this instance was created with and that `YGGARO_KEYS` points at the right key directory. A restored backup needs *both* the key directory and the original passphrase.
 
-**`nelze otevřít databázi`** / **`nelze vytvořit datový adresář`** — filesystem, not cryptography: permissions, ownership, or a full disk. `df -h` and `ls -ld /var/lib/yggaro /var/lib/yggaro-keys`.
+**`nelze otevřít databázi`** / **`nelze vytvořit datový adresář`** — filesystem, not cryptography: permissions, ownership, or a full disk. `df -h` and `ls -ln /var/lib/yggaro`. Everything there must belong to `yggaro`; a maintenance command run as root instead of through `yggaro-admin` leaves root-owned files behind. Fix with `chown -R yggaro:yggaro /var/lib/yggaro`.
 
 **`inicializace selhala`** — the database opened but setup did not finish. The rest of the line names the cause; the journal entry immediately before it is usually the real story.
 
 ## Nobody can create the first administrator
 
-Setup asks for the activation token from `YGGARO_BOOTSTRAP_TOKEN`. If it is unset, the first-run wizard will not complete — that is deliberate, so that a stranger who finds a fresh instance cannot claim your organisation first. Set it in `/etc/yggaro-server.env` and restart.
+Setup asks for the activation token from `YGGARO_BOOTSTRAP_TOKEN` (`sed -n 's/^YGGARO_BOOTSTRAP_TOKEN=//p' /etc/yggaro-server.env`). From 1.0.2 an empty database without the token does not even start — that is deliberate, so that a stranger who finds a fresh instance cannot claim your organisation first. Set it in `/etc/yggaro-server.env` and restart.
 
 ## Checksum verification says "No such file or directory"
 
-`SHA256SUMS` covers every artifact of the release, and you probably downloaded one of them. Verify what you actually have:
+`SHA256SUMS` covers every artifact of the release, and you probably downloaded only the binary. Check exactly that file:
 
 ```bash
-sha256sum -c --ignore-missing SHA256SUMS
+grep '  yggaro-server-linux-amd64$' SHA256SUMS | sha256sum -c -
 ```
+
+It must print `yggaro-server-linux-amd64: OK`. Do not rely on `--ignore-missing` alone: it also succeeds when the binary was not checked at all.
 
 ## Behind a reverse proxy
 
@@ -62,10 +77,11 @@ Break-glass recovery needs access to the machine and the key — which is the po
 
 ```bash
 systemctl stop yggaro-server
-YGGARO_DB_PASSPHRASE='…' /opt/yggaro/yggaro-server \
-  -data /var/lib/yggaro -reset-password admin@your-company.example
+yggaro-admin -reset-password admin@your-company.example
 systemctl start yggaro-server
 ```
+
+`yggaro-admin` is the helper from [install, step 6](install.md#6-maintenance-commands-run-as-the-service-account).
 
 It prints the new password unless you pass `-new-password`.
 
@@ -78,8 +94,7 @@ Work outwards from the instance: is MCP on (`YGGARO_MCP=1`), is the client using
 Do not find out during an incident:
 
 ```bash
-YGGARO_KEYS=/srv/restore/yggaro-keys YGGARO_DB_PASSPHRASE='…' \
-  /opt/yggaro/yggaro-server -data /srv/restore/yggaro -verify-restore
+YGGARO_KEYS=/srv/restore/yggaro-keys yggaro-admin -data /srv/restore/yggaro -verify-restore
 ```
 
 Exit code zero proves the data is readable with that key. It does not prove the backup is recent or complete — check the record counts it prints against what you expect. See [back up and restore](backup-restore.md).

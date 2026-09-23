@@ -2,7 +2,7 @@
 
 [English](install.md) · [Čeština](install.cs.md)
 
-Jde o serverovou edici: jedna organizace, jedna databáze, jeden stroj. Podporovaný cíl prvního vydání je Ubuntu 24.04, `linux-amd64`, 2 vCPU, 4 GB RAM a 40 GB disku. Potřebujete root, veřejné DNS jméno a otevřené TCP porty 80/443.
+Jde o serverovou edici: jedna organizace, jedna databáze, jeden stroj. Podporovaný cíl prvního vydání je Ubuntu 24.04, `linux-amd64`, 2 vCPU, 4 GB RAM a 40 GB disku. K instalaci potřebujete root, veřejné DNS jméno a otevřené TCP porty 80/443. Samotný server **neběží jako root**: běží pod vlastním neprivilegovaným účtem a smí jen naslouchat na portech 80 a 443.
 
 ## 1. DNS a firewall
 
@@ -20,28 +20,42 @@ ufw --force enable
 Stáhněte `yggaro-server-linux-amd64` a `SHA256SUMS` ze stejného GitHub Release.
 
 ```bash
-sha256sum --ignore-missing -c SHA256SUMS
+grep '  yggaro-server-linux-amd64$' SHA256SUMS | sha256sum -c -
 install -d /opt/yggaro
 install -m 755 yggaro-server-linux-amd64 /opt/yggaro/yggaro-server
 /opt/yggaro/yggaro-server -version
 ```
 
-`--ignore-missing` je záměrně: `SHA256SUMS` pokrývá celé vydání, zatímco vy potřebujete stáhnout jen binárku pro svou architekturu. Příkaz přesto musí u stažené binárky vypsat `OK`.
+První příkaz musí vypsat `yggaro-server-linux-amd64: OK`. Ověří přesně ten soubor, který budete instalovat. `SHA256SUMS` obsahuje všechny soubory vydání a obyčejné `sha256sum --ignore-missing -c` může skončit úspěšně, aniž by binárku vůbec zkontrolovalo — třeba když se stažený soubor jmenuje jinak.
 
-## 3. Data, klíče a ochrana prvního správce
+## 3. Účet služby, data a tajemství
 
 ```bash
-install -d -m 700 /var/lib/yggaro /var/lib/yggaro-keys
+useradd --system --home-dir /var/lib/yggaro --no-create-home --shell /usr/sbin/nologin yggaro
+install -d -m 700 -o yggaro -g yggaro /var/lib/yggaro /var/lib/yggaro-keys
 umask 077
 printf 'YGGARO_DB_PASSPHRASE=%s\nYGGARO_BOOTSTRAP_TOKEN=%s\n' \
   "$(openssl rand -base64 32)" "$(openssl rand -hex 16)" >/etc/yggaro-server.env
+chmod 600 /etc/yggaro-server.env
 ```
 
-`YGGARO_DB_PASSPHRASE` uložte mimo server. Bez něj je šifrovaná záloha nečitelná. Bootstrap token brání cizímu člověku zabrat účet prvního správce.
+- **`YGGARO_DB_PASSPHRASE`** chrání klíč k databázi. Uložte ji i mimo server: bez ní nejde přečíst žádná záloha. Bez ní server nenastartuje.
+- **`YGGARO_BOOTSTRAP_TOKEN`** brání tomu, aby si prvního správce založil cizí člověk z internetu. S prázdnou databází server bez něj nenastartuje; jakmile první správce existuje, už se nepoužívá.
+- `/etc/yggaro-server.env` zůstává čitelný jen pro root. Čte ho systemd ještě před spuštěním služby, účet `yggaro` ho číst nepotřebuje.
 
-## 4. Služba systemd
+Co služba zapisuje — vše v `/var/lib/yggaro`, vlastník `yggaro`, soubory `0600`, adresáře `0700`:
 
-Vytvořte `/etc/systemd/system/yggaro-server.service`; nahraďte doménu a e-mail pro ACME:
+| Cesta | Obsah |
+|---|---|
+| `yggaro.db`, `yggaro.db-wal`, `yggaro.db-shm` | databáze (SQLite, obsah šifrovaný v klidu) |
+| `files/` | přílohy, šifrované stejným klíčem |
+| `acme/` | účet a certifikáty Let's Encrypt |
+
+`/var/lib/yggaro-keys` zůstává u instalace s passphrase prázdný. Jen ho čtou — nikdy do něj nezapisují — instalace vzniklé před 1.0.2 bez passphrase; viz [upgrade](upgrade.md). Domovský adresář účtu je `/var/lib/yggaro`; nic jiného na disku server nepotřebuje.
+
+## 4. systemd služba
+
+Vytvořte `/etc/systemd/system/yggaro-server.service` a nahraďte doménu a ACME e-mail:
 
 ```ini
 [Unit]
@@ -50,27 +64,83 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
+User=yggaro
+Group=yggaro
 ExecStart=/opt/yggaro/yggaro-server -domain lite.example.cz -acme-email admin@example.cz -data /var/lib/yggaro
 EnvironmentFile=/etc/yggaro-server.env
 Environment=YGGARO_KEYS=/var/lib/yggaro-keys
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+UMask=0077
+ProtectSystem=strict
+ReadWritePaths=/var/lib/yggaro
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
 Restart=always
 RestartSec=3
-NoNewPrivileges=true
-ProtectSystem=full
-ReadWritePaths=/var/lib/yggaro /var/lib/yggaro-keys
-PrivateTmp=true
+RestartPreventExitStatus=78
 
 [Install]
 WantedBy=multi-user.target
 ```
 
+`CAP_NET_BIND_SERVICE` je jediné oprávnění, které proces má: dovolí obyčejnému účtu naslouchat na 80 a 443. `ProtectSystem=strict` udělá pro službu celý souborový systém jen ke čtení kromě `/var/lib/yggaro`. Návratový kód `78` znamená, že server odmítl svou konfiguraci (třeba chybějící passphrase); `RestartPreventExitStatus=78` zabrání systemd, aby ho restartoval každé tři sekundy, takže důvod zůstane v journalu jako jeden čitelný záznam.
+
+## 5. Spuštění a první správce
+
 ```bash
 systemctl daemon-reload
 systemctl enable --now yggaro-server
 systemctl status yggaro-server
+ps -o user=,pid=,args= -C yggaro-server
 curl -fsS https://lite.example.cz/healthz
 ```
 
-Otevřete HTTPS adresu a v průvodci zadejte bootstrap token. Pokračujte [konfigurací](configuration.md), [zálohou a obnovou](backup-restore.md) a [bezpečnostním modelem](security.cs.md).
+`ps` musí ukázat `yggaro`, ne `root`. Otevřete HTTPS adresu; průvodce se zeptá na aktivační token:
 
-Za reverse proxy poslouchejte jen na loopbacku: `-listen 127.0.0.1:7456 -public-host lite.example.cz -secure-cookies`. `-trust-proxy` zapínejte jen tehdy, když je přímým peerem důvěryhodná proxy na loopbacku.
+```bash
+sed -n 's/^YGGARO_BOOTSTRAP_TOKEN=//p' /etc/yggaro-server.env
+```
+
+## 6. Údržbové příkazy pod účtem služby
+
+Zálohy, zkoušky obnovy, exporty, obnova hesla i MCP tokeny jsou jednorázová spuštění téže binárky. **Nespouštějte je jako root**: vedle databáze by vznikly soubory patřící rootovi, do kterých pak služba nemůže zapisovat. Nainstalujte si malého pomocníka, který je spustí pod účtem služby s jejími tajemstvími:
+
+```bash
+cat >/usr/local/sbin/yggaro-admin <<'EOF'
+#!/bin/sh
+# One-off yggaro-server commands under the service account, with the service's secrets.
+exec systemd-run --quiet --wait --pipe --collect \
+  --uid=yggaro --gid=yggaro -p UMask=0077 \
+  -p EnvironmentFile=/etc/yggaro-server.env \
+  -p Environment=YGGARO_KEYS=${YGGARO_KEYS:-/var/lib/yggaro-keys} \
+  /opt/yggaro/yggaro-server -data /var/lib/yggaro "$@"
+EOF
+chmod 755 /usr/local/sbin/yggaro-admin
+yggaro-admin -verify-restore
+```
+
+Poslední příkaz musí ohlásit, že je databáze čitelná. Když dalšímu příkazu zadáte jiné `-data` (`yggaro-admin -data /srv/restore/yggaro …`), platí to poslední. Cílové adresáře záloh a exportů musí patřit účtu `yggaro`.
+
+Pokračujte [konfigurací](configuration.md), [zálohami a obnovou](backup-restore.md) a [bezpečností](security.cs.md).
+
+## Za reverse proxy
+
+Naslouchejte jen na loopbacku a v `ExecStart` nahraďte volby za `-listen 127.0.0.1:7456 -public-host lite.example.cz -secure-cookies`; `-trust-proxy` přidejte jen tehdy, když přímým protějškem je důvěryhodná proxy na loopbacku. Jednotka zůstává stejná — `CAP_NET_BIND_SERVICE` se pak jen nevyužije. `-no-encrypt` server v tomto režimu i s `-domain` odmítne: slouží jen k místní diagnostice.

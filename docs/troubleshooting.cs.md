@@ -24,23 +24,38 @@ Za vlastní reverse proxy `-domain` nepoužívejte vůbec, viz níže.
 
 ## Server nenastartuje
 
+**`✗ Server odmítl start: …`, návratový kód 78** — server odmítl svou konfiguraci dřív, než cokoli obsloužil (od 1.0.2). Slovo za dvojtečkou jmenuje pravidlo; systemd nechá službu ve stavu `failed` a nerestartuje ji:
+
+| Kód ve zprávě | Význam | Co dělat |
+|---|---|---|
+| `no-db-passphrase` | chybí `YGGARO_DB_PASSPHRASE` | nastavte ji v `/etc/yggaro-server.env`. **Když zpráva jmenuje soubor klíče, nedělejte to** — instance vznikla bez passphrase; viz [upgrade](upgrade.md#from-100-or-101-to-102) |
+| `no-bootstrap-token` | prázdná databáze a chybí `YGGARO_BOOTSTRAP_TOKEN` | nastavte token, restartujte, zadejte ho v průvodci |
+| `passphrase-and-local-key` | nastavená je passphrase i `YGGARO_ALLOW_LOCAL_KEY` | nechte jen to, s čím instance vznikla |
+| `no-existing-local-key` | `YGGARO_ALLOW_LOCAL_KEY` je nastavené, ale na stroji žádný klíč není | souhlas platí jen pro existující klíč, nový nevznikne nikdy. Nastavte passphrase, nebo zkontrolujte `YGGARO_KEYS` |
+| `invalid-local-key` | lokální klíč existuje, ale je poškozený nebo nečitelný | nic se nepřepsalo. Obnovte adresář klíčů ze zálohy |
+| `no-encrypt-in-public-mode` | `-no-encrypt` spolu s veřejným provozem | odeberte `-no-encrypt`; je jen pro místní diagnostiku |
+
+`database-state-unknown` (návratový kód 1, restartuje se) znamená, že server nepoznal, jestli už instance správce má. Hádat nebude; zbytek řádku jmenuje chybu databáze.
+
 **`✗ Chybný šifrovací klíč pro tuto databázi`** — klíč tuhle databázi neotevře. Server se záměrně zastaví, místo aby přepsal data, která neumí přečíst. Zkontrolujte, že `YGGARO_DB_PASSPHRASE` je to heslo, se kterým instance vznikla, a že `YGGARO_KEYS` ukazuje na správný adresář klíčů. Obnovená záloha potřebuje *obojí* — adresář klíčů i původní heslo.
 
-**`nelze otevřít databázi`** / **`nelze vytvořit datový adresář`** — souborový systém, ne kryptografie: práva, vlastník nebo plný disk. `df -h` a `ls -ld /var/lib/yggaro /var/lib/yggaro-keys`.
+**`nelze otevřít databázi`** / **`nelze vytvořit datový adresář`** — souborový systém, ne kryptografie: práva, vlastník nebo plný disk. `df -h` a `ls -ln /var/lib/yggaro`. Všechno tam musí patřit účtu `yggaro`; údržbový příkaz spuštěný jako root místo přes `yggaro-admin` po sobě nechá soubory patřící rootovi. Oprava: `chown -R yggaro:yggaro /var/lib/yggaro`.
 
 **`inicializace selhala`** — databáze se otevřela, ale příprava nedoběhla. Příčinu nese zbytek řádku; skutečný příběh je obvykle v řádku těsně před ním.
 
 ## Nejde založit prvního správce
 
-Průvodce chce aktivační token z `YGGARO_BOOTSTRAP_TOKEN`. Když není nastavený, první spuštění se nedokončí — a je to schválně, aby si cizí člověk, který narazí na čerstvou instanci, nezaložil vaši organizaci dřív než vy. Doplňte ho do `/etc/yggaro-server.env` a restartujte.
+Průvodce chce aktivační token z `YGGARO_BOOTSTRAP_TOKEN` (`sed -n 's/^YGGARO_BOOTSTRAP_TOKEN=//p' /etc/yggaro-server.env`). Od 1.0.2 prázdná databáze bez tokenu ani nenastartuje — a je to schválně, aby si cizí člověk, který narazí na čerstvou instanci, nezaložil vaši organizaci dřív než vy. Doplňte ho do `/etc/yggaro-server.env` a restartujte.
 
 ## Kontrola otisků hlásí „No such file or directory"
 
-`SHA256SUMS` pokrývá všechny soubory vydání a vy jste si nejspíš stáhli jen některý. Ověřte to, co opravdu máte:
+`SHA256SUMS` pokrývá všechny soubory vydání a vy jste si nejspíš stáhli jen binárku. Ověřte přesně ten soubor:
 
 ```bash
-sha256sum -c --ignore-missing SHA256SUMS
+grep '  yggaro-server-linux-amd64$' SHA256SUMS | sha256sum -c -
 ```
+
+Musí vypsat `yggaro-server-linux-amd64: OK`. Samotnému `--ignore-missing` nevěřte: projde i tehdy, když se binárka vůbec nezkontrolovala.
 
 ## Za reverse proxy
 
@@ -60,10 +75,11 @@ Nouzová obnova potřebuje přístup ke stroji a ke klíči — a právě o to j
 
 ```bash
 systemctl stop yggaro-server
-YGGARO_DB_PASSPHRASE='…' /opt/yggaro/yggaro-server \
-  -data /var/lib/yggaro -reset-password spravce@vase-firma.example
+yggaro-admin -reset-password spravce@vase-firma.example
 systemctl start yggaro-server
 ```
+
+`yggaro-admin` je pomocník z [instalace, krok 6](install.cs.md#6-údržbové-příkazy-pod-účtem-služby).
 
 Nové heslo vypíše, pokud nezadáte `-new-password`.
 
@@ -76,8 +92,7 @@ Postupujte od instance ven: je MCP zapnuté (`YGGARO_MCP=1`), používá klient 
 Nezjišťujte to při havárii:
 
 ```bash
-YGGARO_KEYS=/srv/restore/yggaro-keys YGGARO_DB_PASSPHRASE='…' \
-  /opt/yggaro/yggaro-server -data /srv/restore/yggaro -verify-restore
+YGGARO_KEYS=/srv/restore/yggaro-keys yggaro-admin -data /srv/restore/yggaro -verify-restore
 ```
 
 Nulový návratový kód dokládá, že data jsou tím klíčem čitelná. Nedokládá, že je záloha čerstvá a úplná — počty záznamů, které vypíše, porovnejte s tím, co čekáte. Viz [záloha a obnova](backup-restore.md).

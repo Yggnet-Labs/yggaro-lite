@@ -11,10 +11,9 @@ MCP dovolí vlastnímu AI klientovi zákazníka pracovat s Yggaro Lite. Není to
 Přidejte `YGGARO_MCP=1` do prostředí služby a restartujte ji. Streamable HTTP endpoint je `https://vase-domena.cz/mcp`. Vestavěné OAuth je volitelné přes `YGGARO_MCP_OAUTH=1`; jinak vydejte opaque bearer mandát lokálně:
 
 ```bash
-YGGARO_DB_PASSPHRASE='…' /opt/yggaro/yggaro-server \
-  -data /var/lib/yggaro -mcp-token admin@example.cz -mcp-scopes 'mcp.read'
+yggaro-admin -mcp-token admin@example.cz -mcp-scopes 'mcp.read'
 ```
 
-Token se ukáže jen jednou. Uložte ho do úložiště tajemství AI klienta, nikdy do Gitu nebo chatu. Klient potřebuje MCP URL a `Authorization: Bearer <token>`. Začněte read-only a před nástroji si nechte vypsat capability.
+`yggaro-admin` spustí příkaz pod účtem služby ([instalace, krok 6](install.cs.md#6-údržbové-příkazy-pod-účtem-služby)). Token se ukáže jen jednou. Uložte ho do úložiště tajemství AI klienta, nikdy do Gitu nebo chatu. Klient potřebuje MCP URL a `Authorization: Bearer <token>`. Začněte read-only a před nástroji si nechte vypsat capability.
 
 Každý přístup se mapuje na místního uživatele a mandát. Výchozí mandát je read-only, platí 90 dní (maximum 365) a superadmin ho může okamžitě odvolat. RBAC aplikace platí dál. Po nastavení ověřte povolené čtení, odmítnutý zápis a skutečnou revokaci. Viz [oprávnění](mcp-permissions.cs.md).

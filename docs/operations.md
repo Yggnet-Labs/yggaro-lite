@@ -7,10 +7,11 @@ Day-to-day running of an instance. Install is in [install](install.md); this is 
 ```bash
 curl -fsS https://your-domain.example/healthz
 systemctl status yggaro-server
+ps -o user=,pid=,args= -C yggaro-server
 journalctl -u yggaro-server --since today
 ```
 
-`/healthz` reports liveness and the running version. Point your existing monitoring at it — and alert on the version too, not only on the status: a machine that quietly stayed on an old binary is the failure you find out about late.
+`/healthz` reports liveness and the running version. `ps` must show the `yggaro` account, never `root`. Point your existing monitoring at it — and alert on the version too, not only on the status: a machine that quietly stayed on an old binary is the failure you find out about late.
 
 ## Routine
 
@@ -29,9 +30,10 @@ The restore drill is the one people skip. An untested backup is a belief, not a 
 Three things, all of them: the database snapshot, `files/`, and the key directory. And, stored somewhere else entirely, the passphrase. See [back up and restore](backup-restore.md).
 
 ```bash
-YGGARO_DB_PASSPHRASE='…' /opt/yggaro/yggaro-server \
-  -data /var/lib/yggaro -backup /srv/backup/yggaro-$(date +%F).db
+yggaro-admin -backup /srv/backup/yggaro-$(date +%F).db
 ```
+
+`yggaro-admin` runs it under the service account — see [install, step 6](install.md#6-maintenance-commands-run-as-the-service-account). Running maintenance commands as root leaves root-owned files next to the database that the service cannot write.
 
 `-backup` is consistent and works while the instance is running, so it does not need a maintenance window.
 
@@ -54,7 +56,7 @@ When you enable MCP or put the instance behind a proxy, check that the log shows
 
 ## Secrets
 
-Secrets belong in the root-only environment file or your secret manager — never in Git, an issue, or a log. Rotate a notification webhook by replacing it in the application. Rotating the database passphrase is not a routine operation; treat it as a migration, with a verified backup first.
+Secrets belong in the root-only environment file (`/etc/yggaro-server.env`) or your secret manager — never in Git, an issue, or a log. Rotate a notification webhook by replacing it in the application. Rotating the database passphrase is not a routine operation; treat it as a migration, with a verified backup first.
 
 ## Related
 

@@ -56,8 +56,8 @@ Dvě cesty, jedna implementace, takže obě dají tentýž balík:
 # POST /api/admin/export
 
 # Nebo z příkazové řádky — tahle funguje i nad zastavenou instancí
-YGGARO_DB_PASSPHRASE='…' /opt/yggaro/yggaro-server \
-  -data /var/lib/yggaro -export /srv/export/yggaro-export.zip
+# (pod účtem služby — yggaro-admin, viz instalace krok 6; /srv/export musí patřit účtu yggaro)
+yggaro-admin -export /srv/export/yggaro-export.zip
 ```
 
 V ZIPu je `data/<entita>.json` pro každou exportovanou entitu, `files/` s přílohami pod původními jmény a `manifest.json`, který přesně říká, co uvnitř je a kolik čeho. Je to obyčejný JSON: čitelný bez nás a bez tohohle softwaru.

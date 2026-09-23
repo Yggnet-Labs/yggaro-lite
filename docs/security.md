@@ -6,8 +6,9 @@ One server instance belongs to one organisation. The OS administrator, DNS/TLS c
 
 - TLS terminates in built-in ACME or an explicitly configured reverse proxy.
 - Database content **and attachment contents** are encrypted at rest under the same key; key material lives outside the data directory. Record identifiers and replication metadata stay readable so that indexing works, so filesystem and disk protection remain part of the picture rather than a substitute for it. See [data and privacy](data-and-privacy.md).
-- Secrets belong in a root-readable environment file or secret manager, never Git, issues or logs.
-- First administrator creation requires a bootstrap token.
+- The service runs under its own unprivileged account; the only privilege it keeps is binding ports 80/443 (`CAP_NET_BIND_SERVICE`), and systemd sandboxing leaves it write access to its data directory only. See [install](install.md).
+- Secrets belong in a root-only environment file or secret manager, never Git, issues or logs.
+- First administrator creation requires a bootstrap token. From 1.0.2 the server refuses to start on an empty database without one, and refuses to start without a database passphrase at all, instead of silently running unprotected.
 
 Main controls cover first-user takeover, session/account theft, object-level authorisation, encrypted backups and overpowered MCP clients (expiring mandates, scopes, capabilities, data classes, confirmation and revocation).
 

@@ -56,8 +56,8 @@ Two routes, one implementation, so both give the same package:
 # POST /api/admin/export
 
 # Or from the command line — this one also works on a stopped instance
-YGGARO_DB_PASSPHRASE='…' /opt/yggaro/yggaro-server \
-  -data /var/lib/yggaro -export /srv/export/yggaro-export.zip
+# (as the service account — yggaro-admin, see install step 6; /srv/export must belong to yggaro)
+yggaro-admin -export /srv/export/yggaro-export.zip
 ```
 
 The ZIP contains `data/<entity>.json` for every exported entity, `files/` with attachments under their original names, and `manifest.json` stating exactly what is inside and how many records of each kind. It is plain JSON: readable without us, and without this software.

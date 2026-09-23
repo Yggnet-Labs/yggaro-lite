@@ -11,11 +11,10 @@ MCP lets a customer's own AI client work with Yggaro Lite. It is not “AI insid
 Add `YGGARO_MCP=1` to the service environment and restart. The Streamable HTTP endpoint is `https://your-domain.example/mcp`. Built-in OAuth is opt-in with `YGGARO_MCP_OAUTH=1`; otherwise issue an opaque bearer mandate locally:
 
 ```bash
-YGGARO_DB_PASSPHRASE='…' /opt/yggaro/yggaro-server \
-  -data /var/lib/yggaro -mcp-token admin@example.com -mcp-scopes 'mcp.read'
+yggaro-admin -mcp-token admin@example.com -mcp-scopes 'mcp.read'
 ```
 
-The plaintext token is shown once. Store it in the AI client's secret storage, never in Git or chat. Configure the client with the MCP URL and `Authorization: Bearer <token>`. Start read-only and ask the client for the capability description before using tools.
+`yggaro-admin` runs the command under the service account ([install, step 6](install.md#6-maintenance-commands-run-as-the-service-account)). The plaintext token is shown once. Store it in the AI client's secret storage, never in Git or chat. Configure the client with the MCP URL and `Authorization: Bearer <token>`. Start read-only and ask the client for the capability description before using tools.
 
 ## Operational lifecycle
 
