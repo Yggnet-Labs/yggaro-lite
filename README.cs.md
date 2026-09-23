@@ -10,7 +10,7 @@ Tento repozitář obsahuje **serverovou edici**. Jedna instance slouží jedné 
 
 *Vyzkoušejte si to bez instalace: [ukazka.yggarolite.cz](https://ukazka.yggarolite.cz) — ukázka jen ke čtení, s vymyšlenými daty. Přihlášení `ukazka@yggarolite.cz` / `UkazkaYggaro2026`.*
 
-> **Rozsah produktu:** Vydaný produkt je **serverová binárka**, teď [1.0.1](https://github.com/Yggnet-Labs/yggaro-lite/releases/tag/v1.0.1). Zdrojový kód aplikace v tomhle repozitáři není. Mesh (peer-to-peer edice pro desktop/LAN) a Lite AI (AI uvnitř aplikace) jsou jiné, odložené produkty a součástí tohohle stažení nejsou. U žádného neslibujeme termín.
+> **Rozsah produktu:** Vydaný produkt je **serverová binárka** na stránce [Releases](https://github.com/Yggnet-Labs/yggaro-lite/releases). Zdrojový kód aplikace v tomhle repozitáři není. Mesh (peer-to-peer edice pro desktop/LAN) a Lite AI (AI uvnitř aplikace) jsou jiné, odložené produkty a součástí tohohle stažení nejsou. U žádného neslibujeme termín.
 
 ## Proč ho týmy používají
 
@@ -32,14 +32,7 @@ Snímky jsou z veřejné ukázky, data jsou vymyšlená.
 
 ## Self-host stručně
 
-Podporovaný cíl prvního vydání je Ubuntu 24.04 na `linux-amd64`, veřejná doména a porty 80/443. Stáhněte binárku vydání a `SHA256SUMS`, ověřte je a pokračujte [českým instalačním návodem](docs/install.cs.md).
-
-```bash
-sha256sum -c --ignore-missing SHA256SUMS
-./yggaro-server -version
-```
-
-`--ignore-missing` je nutné: `SHA256SUMS` pokrývá celé vydání, a kdo stáhl jen binárku, by jinak dostal chybu chybějících souborů. Nenasazujte náhodnou větev ani automatický zdrojový archiv GitHubu. Ten archiv není zdroj aplikace. Používejte binárku vydání s kontrolními součty.
+Podporovaný cíl je Ubuntu 24.04 na `linux-amd64`, veřejná doména a porty 80/443. Stáhněte vydání ze stránky [Releases](https://github.com/Yggnet-Labs/yggaro-lite/releases). Soubor serveru se jmenuje `yggaro-server-linux-amd64`. Kontrolní součet právě toho souboru, právo ke spuštění a start jsou v [českém instalačním návodu](docs/install.cs.md). Tahle stránka ty příkazy neopakuje. Nenasazujte náhodnou větev ani automatický zdrojový archiv GitHubu. Ten archiv není zdroj aplikace.
 
 ## Dokumentace
 
@@ -55,7 +48,7 @@ sha256sum -c --ignore-missing SHA256SUMS
 
 ## Licence
 
-Tenhle repozitář zveřejňuje dokumentaci a serverovou binárku, ne zdrojový kód aplikace. Binárka se nabízí pod licencí přiloženou k vydání (FSL-1.1-ALv2). Ta licence není OSI open source. Nabízet produkt jako konkurenční komerční službu třetím stranám se nesmí. Protože zdroj aplikace zveřejněný není, tahle stránka neslibuje, že si přečtete nebo upravíte zdroj, který nemáte. Jestli zdrojové věty FSL sedí na vydání jen s binárkou, je otevřená právní otázka, ne rozhodnutí téhle stránky. Čtěte [LICENSE](LICENSE) a [NOTICE](NOTICE). Kde se shrnutí a licence rozejdou, platí licence.
+Tenhle repozitář zveřejňuje dokumentaci a serverovou binárku, ne zdrojový kód aplikace. Binárka se nabízí pod licencí přiloženou k vydání (FSL-1.1-ALv2). Ta licence není OSI open source. Nabízet produkt jako konkurenční komerční službu třetím stranám se nesmí. Tahle stránka neslibuje, že si přečtete nebo upravíte zdroj aplikace. Ve stažení není. Čtěte [LICENSE](LICENSE) a [NOTICE](NOTICE). Kde se shrnutí a licence rozejdou, platí licence.
 
 ## Vývoj
 
