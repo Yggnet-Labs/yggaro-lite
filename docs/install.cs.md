@@ -144,10 +144,16 @@ exec systemd-run --quiet --wait --pipe --collect \
   /opt/yggaro/yggaro-server -data /var/lib/yggaro "$@"
 EOF
 chmod 755 /usr/local/sbin/yggaro-admin
-yggaro-admin -verify-restore
+bash -euo pipefail <<'CHECK'
+R=$(mktemp -d /var/lib/yggaro-restore-check.XXXXXX)
+trap 'rm -rf -- "$R"' EXIT
+chown yggaro:yggaro "$R"
+yggaro-admin -backup "$R/yggaro.db"
+yggaro-admin -data "$R" -verify-restore
+CHECK
 ```
 
-Poslední příkaz musí ohlásit, že je databáze čitelná. Když dalšímu příkazu zadáte jiné `-data` (`yggaro-admin -data /srv/restore/yggaro …`), platí to poslední. Cílové adresáře záloh a exportů musí patřit účtu `yggaro`.
+Kontrola vytvoří konzistentní snapshot v novém soukromém adresáři, ověří tuto kopii a dočasnou kopii odstraní i při selhání. Musí ohlásit, že je databáze čitelná. Přílohy neověřuje. `-verify-restore` nespouštějte nad adresářem běžící služby: neprázdný WAL odmítne, aby nepřehlédl dosud nezapsané změny. Když dalšímu příkazu zadáte jiné `-data` (`yggaro-admin -data /srv/restore/yggaro …`), platí to poslední. Cílové adresáře záloh a exportů musí patřit účtu `yggaro`.
 
 Pokračujte [konfigurací](configuration.md), [zálohami a obnovou](backup-restore.md) a [bezpečností](security.cs.md).
 

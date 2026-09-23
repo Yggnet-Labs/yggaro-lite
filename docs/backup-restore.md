@@ -13,6 +13,12 @@ tar -C /var/lib -czf /srv/backup/yggaro-keys.tgz yggaro-keys
 
 Copy artifacts off the instance. Store `YGGARO_DB_PASSPHRASE` separately.
 
+`-verify-restore` reads a standalone database snapshot without modifying it.
+It rejects a nonempty `yggaro.db-wal`, rather than silently checking an older
+main file. Use the snapshot produced by `-backup`; never delete a live WAL
+to make the check pass. A missing source database is an error, not a new
+instance. A zero exit does not check attachment files or business completeness.
+
 Restore only into an isolated directory first:
 
 ```bash

@@ -87,11 +87,17 @@ systemctl daemon-reload
 systemctl start yggaro-server
 systemctl status yggaro-server
 ps -o user=,pid=,args= -C yggaro-server
-yggaro-admin -verify-restore
+bash -euo pipefail <<'CHECK'
+R=$(mktemp -d /var/lib/yggaro-restore-check.XXXXXX)
+trap 'rm -rf -- "$R"' EXIT
+chown yggaro:yggaro "$R"
+yggaro-admin -backup "$R/yggaro.db"
+yggaro-admin -data "$R" -verify-restore
+CHECK
 curl -fsS https://lite.example.com/healthz
 ```
 
-`ps` must show `yggaro`. If the service ends in `failed`, `journalctl -u yggaro-server -n 20` states the reason in one message and systemd does not keep restarting it (exit code `78`); see [troubleshooting](troubleshooting.md#the-server-will-not-start).
+The restore check above reads a fresh snapshot, not the running database; it checks database readability, not attachments or business completeness. Its temporary directory is removed on success or failure. `ps` must show `yggaro`. If the service ends in `failed`, `journalctl -u yggaro-server -n 20` states the reason in one message and systemd does not keep restarting it (exit code `78`); see [troubleshooting](troubleshooting.md#the-server-will-not-start).
 
 ### Rollback
 

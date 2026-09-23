@@ -144,10 +144,16 @@ exec systemd-run --quiet --wait --pipe --collect \
   /opt/yggaro/yggaro-server -data /var/lib/yggaro "$@"
 EOF
 chmod 755 /usr/local/sbin/yggaro-admin
-yggaro-admin -verify-restore
+bash -euo pipefail <<'CHECK'
+R=$(mktemp -d /var/lib/yggaro-restore-check.XXXXXX)
+trap 'rm -rf -- "$R"' EXIT
+chown yggaro:yggaro "$R"
+yggaro-admin -backup "$R/yggaro.db"
+yggaro-admin -data "$R" -verify-restore
+CHECK
 ```
 
-The last command must report that the database is readable. Every later option that takes `-data` accepts another directory (`yggaro-admin -data /srv/restore/yggaro …`); the last value wins. Target directories for backups and exports must belong to `yggaro`.
+The check creates a consistent snapshot in a new private directory, verifies that copy, then removes the temporary copy even if verification fails. It must report that the database is readable. It does not verify attachments. Do not run `-verify-restore` against the running service’s data directory: a nonempty WAL is rejected so that uncheckpointed changes cannot be missed. Every later option that takes `-data` accepts another directory (`yggaro-admin -data /srv/restore/yggaro …`); the last value wins. Target directories for backups and exports must belong to `yggaro`.
 
 Continue with [configuration](configuration.md), [backup and restore](backup-restore.md) and [security](security.md).
 
