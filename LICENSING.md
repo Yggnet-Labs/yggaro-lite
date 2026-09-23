@@ -4,47 +4,46 @@
 > lidskou řečí, aby se nikdo nemusel prokousávat právním textem kvůli otázce
 > „smím to použít u nás ve firmě?". Kde se shrnutí a licence rozejdou, platí licence.
 
-Yggaro Lite je pod **FSL-1.1-ALv2** (Functional Source License). Není to OSI open
-source. Rozhodnutí o té licenci schválil vlastník produktu 11. 7. 2026 (ADR, sekce Licence).
+Yggaro Lite je pod **FSL-1.1-ALv2** (Functional Source License). Po dobu platnosti FSL
+to není OSI open source.
 
 **Co si stáhnete.** Vydání v tomhle repozitáři je serverová binárka a dokumentace.
-Zdrojový kód aplikace v něm není. Řádky o čtení a úpravě zdroje popisují text licence,
-ne soubory v balíku.
+Zdroj aplikace není zveřejněn; tento repozitář neumožňuje sestavit vlastní verzi ze
+zdrojů aplikace. Text licence FSL je obecný a mluví i o úpravách softwaru — to ale
+neznamená, že je zdroj součástí vydání.
 
 ## Krátce
 
 | | |
 |---|---|
 | ✅ **Smíte** | používat u sebe ve firmě staženou serverovou binárku, provozovat vlastní instanci pro vlastní potřebu a používat ji k neziskové výuce a výzkumu |
-| ✅ **Smíte** | nasadit vydanou binárku jako součást služby zákazníkovi, který má licenci. Úpravu zdrojového kódu tohle shrnutí nepovoluje, protože vydání zdroj neobsahuje |
+| ✅ **Smíte** | nasadit vydanou binárku jako součást služby zákazníkovi, který má licenci |
 | ❌ **Nesmíte** | nabízet Yggaro Lite (ani produkt s podstatně stejnou funkcí) **jako komerční službu třetím stranám** — tedy konkurovat nám naším vlastním kódem |
 | ⏳ **Za dva roky** | každá verze se **automaticky** stane Apache-2.0. Není to slib do budoucna, je to součást licence, kterou dostáváte dnes |
 
 „Za dva roky" se počítá **od zpřístupnění dané verze**, ne od jednoho pevného data.
-Verze vydaná dnes je Apache-2.0 přesně za dva roky ode dneška.
+Verze vydaná dnes je Apache-2.0 přesně za dva roky ode dneška. Týká se to toho, co bylo
+zpřístupněno — tedy binárky; zveřejnění zdroje z toho neplyne.
 
 ## Proč zrovna tohle
 
-Chceme, aby si kdokoli mohl **stáhnout serverovou binárku, přečíst dokumentaci a provozovat ji u sebe**. Zdroj aplikace k tomu dnes přiložený není.
-Nechceme, aby ho někdo vzal a prodával jako vlastní SaaS.
+Chceme, aby si kdokoli mohl **stáhnout serverovou binárku, přečíst dokumentaci a provozovat ji u sebe**.
+Nechceme, aby někdo Yggaro Lite vzal a prodával jako vlastní SaaS.
 
 Klasické open source licence to neumí oddělit: buď dovolí obojí, nebo nic.
-FSL to odděluje v textu licence. Balík, který si stáhnete, zdrojový kód neobsahuje,
-takže z něj odvozené dílo neuděláte.
+FSL to odděluje v textu licence.
 
-Pro zákazníka hostované služby je cesta ven export dat v rozsahu obchodních podmínek,
-ne převod licence na zdroj, který vydání neobsahuje.
+Pro zákazníka hostované služby je cesta ven export dat v rozsahu obchodních podmínek.
 
 ## Kanonická verze × fork
 
 **Kanonická verze** je ta, kterou vydává Yggnet Labs (GitHub release a binárka
-s kontrolními součty). Binárky tohoto vydání nejsou podepsané. Jen kanonická
-verze dostává bezpečnostní aktualizace, upgrade cestu a podporu. Serverová
-edice 1.0 federaci uzlů nemá.
+s kontrolními součty `SHA256SUMS`, kterými ověříte pravost; kryptografický podpis
+binárek se nepoužívá). Jen kanonická verze dostává bezpečnostní aktualizace, upgrade
+cestu a podporu. Serverová edice federaci uzlů nemá.
 
-**Odvozené dílo ze zdrojového kódu** z tohoto repozitáře neuděláte, protože
-zdroj aplikace v něm není. Jméno a značka Yggaro se s binárkou nepřenášejí
-a nesmí se vydávat za kanonickou verzi.
+Jméno a značka Yggaro se s binárkou nepřenášejí; upravenou nebo jinak odvozenou verzi
+nelze vydávat za kanonickou ani ji označovat jménem Yggaro.
 
 ## Co to znamená pro poskytovatele služeb
 

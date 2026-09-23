@@ -12,4 +12,4 @@ Do **not** open a public issue. Follow [SECURITY.md](SECURITY.md) and write to [
 
 ## What we can support
 
-The documented 1.0.0 self-host target is Ubuntu 24.04 on `linux-amd64`, using the published release artifact. We may help with other environments, forks or source builds, but do not promise them as supported configurations. The operator remains responsible for OS administration, DNS, TLS, backups and secrets.
+The documented self-host target is Ubuntu 24.04 on `linux-amd64`, using the published release artifact. We may help with other environments, but do not promise them as supported configurations. The operator remains responsible for OS administration, DNS, TLS, backups and secrets.

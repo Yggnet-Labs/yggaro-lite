@@ -2,8 +2,10 @@ Yggaro Lite
 Copyright 2026 Yggnet Labs s.r.o.
 
 This software is licensed under the Functional Source License, Version 1.1,
-with the Apache License 2.0 future licence (FSL-1.1-ALv2). It is
-not OSI-approved open source. The application source is not in this repository.
+with the Apache License 2.0 future licence (FSL-1.1-ALv2). It is not
+OSI-approved open source during the FSL period. The application source code
+is not published in this repository; releases contain the server binary and
+documentation.
 See LICENSE for the complete terms; the licence text governs.
 
 Yggaro, Yggaro Lite and Yggnet Labs names and marks are not licensed except
