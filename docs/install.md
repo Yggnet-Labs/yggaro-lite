@@ -20,24 +20,34 @@ ufw --force enable
 Download `yggaro-server-linux-amd64` and `SHA256SUMS` from the same GitHub release.
 
 ```bash
+bash -euo pipefail <<'STEP'
 grep '  yggaro-server-linux-amd64$' SHA256SUMS | sha256sum -c -
 install -d /opt/yggaro
 install -m 755 yggaro-server-linux-amd64 /opt/yggaro/yggaro-server
 /opt/yggaro/yggaro-server -version
+STEP
 ```
 
-The first command must print `yggaro-server-linux-amd64: OK`. It checks exactly the file you are about to install. `SHA256SUMS` lists every file of the release; a plain `sha256sum --ignore-missing -c` can finish successfully without having checked the binary at all, for example when the downloaded file has a different name.
+The block runs as one script that **stops at the first failure**: when the checksum does not match — or the binary is missing from `SHA256SUMS` — nothing is installed and nothing is executed. It must print `yggaro-server-linux-amd64: OK` before the version. It checks exactly the file you are about to install: `SHA256SUMS` lists every file of the release, and a plain `sha256sum --ignore-missing -c` can finish successfully without having checked the binary at all, for example when the downloaded file has a different name.
 
 ## 3. Service account, data and secrets
 
 ```bash
-useradd --system --home-dir /var/lib/yggaro --no-create-home --shell /usr/sbin/nologin yggaro
+bash -euo pipefail <<'STEP'
+id -u yggaro >/dev/null 2>&1 || useradd --system --home-dir /var/lib/yggaro --no-create-home --shell /usr/sbin/nologin yggaro
 install -d -m 700 -o yggaro -g yggaro /var/lib/yggaro /var/lib/yggaro-keys
+if [ -e /etc/yggaro-server.env ]; then
+  echo "STOP: /etc/yggaro-server.env already exists and holds the database passphrase — not overwriting it." >&2
+  exit 1
+fi
 umask 077
 printf 'YGGARO_DB_PASSPHRASE=%s\nYGGARO_BOOTSTRAP_TOKEN=%s\n' \
   "$(openssl rand -base64 32)" "$(openssl rand -hex 16)" >/etc/yggaro-server.env
 chmod 600 /etc/yggaro-server.env
+STEP
 ```
+
+Running the block again never replaces an existing `/etc/yggaro-server.env`: a new passphrase would lock the data out.
 
 - **`YGGARO_DB_PASSPHRASE`** protects the database key. Store it off the server as well: without it no backup can be read. The server refuses to start without it.
 - **`YGGARO_BOOTSTRAP_TOKEN`** stops an internet stranger from claiming the first administrator account. On an empty database the server refuses to start without it; once the first administrator exists it is no longer used.

@@ -20,24 +20,34 @@ ufw --force enable
 Stáhněte `yggaro-server-linux-amd64` a `SHA256SUMS` ze stejného GitHub Release.
 
 ```bash
+bash -euo pipefail <<'STEP'
 grep '  yggaro-server-linux-amd64$' SHA256SUMS | sha256sum -c -
 install -d /opt/yggaro
 install -m 755 yggaro-server-linux-amd64 /opt/yggaro/yggaro-server
 /opt/yggaro/yggaro-server -version
+STEP
 ```
 
-První příkaz musí vypsat `yggaro-server-linux-amd64: OK`. Ověří přesně ten soubor, který budete instalovat. `SHA256SUMS` obsahuje všechny soubory vydání a obyčejné `sha256sum --ignore-missing -c` může skončit úspěšně, aniž by binárku vůbec zkontrolovalo — třeba když se stažený soubor jmenuje jinak.
+Blok běží jako jeden skript, který se **zastaví při první chybě**: když otisk nesedí — nebo binárka v `SHA256SUMS` chybí — nic se nenainstaluje ani nespustí. Před verzí musí vypsat `yggaro-server-linux-amd64: OK`. Ověří přesně ten soubor, který budete instalovat: `SHA256SUMS` obsahuje všechny soubory vydání a obyčejné `sha256sum --ignore-missing -c` může skončit úspěšně, aniž by binárku vůbec zkontrolovalo — třeba když se stažený soubor jmenuje jinak.
 
 ## 3. Účet služby, data a tajemství
 
 ```bash
-useradd --system --home-dir /var/lib/yggaro --no-create-home --shell /usr/sbin/nologin yggaro
+bash -euo pipefail <<'STEP'
+id -u yggaro >/dev/null 2>&1 || useradd --system --home-dir /var/lib/yggaro --no-create-home --shell /usr/sbin/nologin yggaro
 install -d -m 700 -o yggaro -g yggaro /var/lib/yggaro /var/lib/yggaro-keys
+if [ -e /etc/yggaro-server.env ]; then
+  echo "STOP: /etc/yggaro-server.env už existuje a nese heslo k databázi — nepřepisuji ho." >&2
+  exit 1
+fi
 umask 077
 printf 'YGGARO_DB_PASSPHRASE=%s\nYGGARO_BOOTSTRAP_TOKEN=%s\n' \
   "$(openssl rand -base64 32)" "$(openssl rand -hex 16)" >/etc/yggaro-server.env
 chmod 600 /etc/yggaro-server.env
+STEP
 ```
+
+Opakovaný běh bloku existující `/etc/yggaro-server.env` nikdy nepřepíše: nová passphrase by data zamkla.
 
 - **`YGGARO_DB_PASSPHRASE`** chrání klíč k databázi. Uložte ji i mimo server: bez ní nejde přečíst žádná záloha. Bez ní server nenastartuje.
 - **`YGGARO_BOOTSTRAP_TOKEN`** brání tomu, aby si prvního správce založil cizí člověk z internetu. S prázdnou databází server bez něj nenastartuje; jakmile první správce existuje, už se nepoužívá.
