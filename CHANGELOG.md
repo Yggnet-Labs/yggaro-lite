@@ -1,18 +1,85 @@
 # Changelog — Yggaro Lite
 
-SemVer. **Jediný zdroj pravdy o verzi** je konstanta `V` v
-`internal/version/version.go` (čte ji UI, `-version` i `/healthz`; sdílí ji
-mesh i serverová edice). Vývojové buildy: `X.Y.Z-devN`. Release = čistý tag
-`X.Y.Z` + záznam níže.
-*(Do 15. 8. tu stálo `cmd/yggaro-server/main.go` — tam verze nebydlí od chvíle,
-kdy se sjednotila napříč edicemi. Opraveno, aby návod nevedl do slepé uličky.)*
+Verze se řídí schématem `MAJOR.MINOR.PATCH` ([VERSIONING](VERSIONING.md)). Verzi,
+kterou máte, vypíše `yggaro-server -version`; totéž vrací `/healthz`. Jak ověřit
+stažené vydání: [release-verification](docs/release-verification.md).
 
-**Schéma (owner 31. 7., platí napříč projekty):** `MAJOR.MINOR.PATCH` —
-1. číslo = verze produktu, 2. číslo = velmi významná změna, 3. číslo = drobná
-vylepšení. Pre-produkce = `0.x` / pre-release `-dev`; **první produkční release
-= `1.0.0`**. (Runtime sjednocen z bloudivého `1.5.0-dev20` na `1.0.0-dev20`.)
+## [1.0.2] — připravuje se
 
-## [1.0.0] — rc1 vydáno 12. 8. 2026 (finální datum doplní tag v1.0.0 po soak týdnu)
+**Serverová edice odmítne nebezpečnou konfiguraci, místo aby ji potichu přijala.**
+Obojí dokumentace od 1.0.0 označovala za povinné, kód to ale nevynucoval:
+
+* **První správce jen s tokenem.** S prázdným `YGGARO_BOOTSTRAP_TOKEN` mohl prvního
+  superadministrátora založit kdokoli, kdo se na adresu instance trefil dřív než
+  provozovatel. Nově server bootstrap bez tokenu vždy odmítne (403) a první
+  spuštění s prázdnou databází bez tokenu nenastartuje. Už založená instance
+  token nepotřebuje.
+* **Klíč k databázi jen z passphrase.** Bez `YGGARO_DB_PASSPHRASE` server
+  nastartoval a klíč si uložil do souboru na stejném stroji jako data. Nově bez
+  passphrase nenastartuje, a to dřív, než by na disk cokoli zapsal.
+* **`-no-encrypt` jen lokálně.** S veřejnou doménou nebo adresou mimo loopback ho
+  server odmítne.
+* Odmítnutí kvůli konfiguraci končí kódem **78** s čitelnou zprávou; jednotka
+  v návodu má `RestartPreventExitStatus=78`, takže systemd restart netočí dokola.
+
+**Co to znamená při aktualizaci:** instalace podle návodu (passphrase i token
+v `/etc/yggaro-server.env`) se nemění. Instalace, která vznikla **bez
+passphrase**, po aktualizaci nenastartuje, dokud to provozovatel výslovně
+nepotvrdí proměnnou `YGGARO_ALLOW_LOCAL_KEY=1`. Passphrase jí nepřidávejte: data
+jsou zašifrovaná souborovým klíčem a s passphrase by se neotevřela. Návrat na
+1.0.1 je výměnou binárky, formát dat se nemění. Postup: [upgrade](docs/upgrade.md).
+
+**Služba běží bez roota.** Návod instaluje server pod vlastním účtem `yggaro`
+jen s oprávněním navázat porty 80 a 443 a s omezeným přístupem k souborovému
+systému. Údržbové příkazy se spouštějí pod týmž účtem. Návod k přechodu
+existující instalace začíná zálohou a zkouškou obnovy, bez nich nepokračuje.
+
+**Údržbové příkazy nad neexistující instancí nic nezaloží.** Překlep v `-data` u
+zálohy dřív skončil úspěchem a zálohou prázdné databáze, kterou si příkaz sám
+založil. Nově `-backup`, `-verify-restore`, `-export`, `-reset-password`,
+`-mcp-token` a správa OAuth klientů nejdřív bez zápisu ověří, že v `-data` leží
+založená instance, jinak skončí chybou. `-verify-restore` je jen pro čtení
+a dešifruje **všechny** uložené hodnoty, ne vzorek; přílohy neověřuje a říká to.
+
+**Vydání nese licenci produktu.** `LICENSE` a `NOTICE` jsou přílohou vydání
+pokrytou `SHA256SUMS`. `-third-party-notices` tiskne aktuální oznámení třetích
+stran (1.0.1 tiskla text z 1.0.0); vydání se nepostaví, když se text v binárce
+liší od přílohy.
+
+**Kreslicí plocha a editor dokumentů mají zase své styly.** Zpřísněná
+Content-Security-Policy blokovala styly, které si Excalidraw a editor vkládají
+samy; nově je dostávají s jednorázovým nonce stránky. Politika se neoslabuje.
+
+**Integrace.** Microsoft Teams: upozornění smí jít i na adresy Power Platform
+(`*.environment.api.powerplatform.com`), jen tato úzká doména. Discord: slash
+příkaz a modal dostávají platné potvrzení viditelné jen autorovi a nepodporované
+typy interakcí se odmítají s HTTP 400. Záznam o přijaté zprávě z chatu nese
+instalaci a ID zprávy; starší záznamy se zpětně nedoplňují.
+
+**SSO: dokumentace odlišuje, co je ověřené.** Příručka v aplikaci rozlišuje seznam
+povolených skupin v aplikaci (ověřeno proti skutečnému tenantu Microsoft 365),
+členství přímo v Entra ID (neověřeno) a už otevřenou relaci (odebrání ze skupiny
+ji neukončí).
+
+## [1.0.1] — 22. 9. 2026
+
+**Opravné vydání. Kdo provozuje 1.0.0 s ukázkovými daty, měl by aktualizovat.**
+
+**Ukázková data už nerozdávají veřejně známé heslo.** Instalační průvodce
+nastavoval všem ukázkovým uživatelům pevné heslo, které bylo čitelné v každé
+stažené binárce. Nově se heslo generuje náhodně a ukáže se jednou, stejně jako
+obnovovací kódy.
+
+**Co s tím, když už 1.0.0 provozujete s ukázkovými daty:** aktualizace hesla
+nezmění. Ve správě uživatelů ukázkové účty zrušte, nebo jim nastavte nová hesla.
+
+**Seznam otisků pokrývá celou sadu příloh.** `SHA256SUMS` nově vzniká ze všech
+konečných souborů vydání a vydání se nepostaví, když soubor zůstane mimo něj.
+
+**Oba balíky JavaScriptu mají doložený původ.** Editor a kreslicí plocha se staví
+ze zdroje s uzamčenými verzemi a licenční seznam se generuje z lockfile.
+
+## [1.0.0] — 22. 9. 2026
 
 **rc17 (20. 9.) — čerstvé přihlášení už na pohledu Server nelže o šifrování.**
 Veřejné `/api/status` dál záměrně nevydává citlivou šifrovací posturu, ale UI po

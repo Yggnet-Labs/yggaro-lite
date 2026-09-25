@@ -6,19 +6,26 @@ Every release carries enough material to answer three questions before you run a
 
 | File | What it is |
 |---|---|
-| `yggaro-server-linux-amd64` | the server binary — the supported target for 1.0.0 |
+| `yggaro-server-linux-amd64` | the server binary — the supported target for the 1.0.x releases |
 | `SHA256SUMS` | checksums covering every file below |
+| `LICENSE` | the product licence (FSL-1.1-ALv2) that governs the downloaded binary |
+| `NOTICE` | the short notice that accompanies the licence |
+| `THIRD-PARTY-NOTICES.md` | licences of the third-party components compiled into the binary; `yggaro-server -third-party-notices` prints the same text |
 | `PROVENANCE.json` | what was built, from which commit and tag |
 | `SBOM.cdx.json` | the dependency inventory, CycloneDX 1.6 |
 | `VERSION.txt` | the same facts in one human-readable page |
 
+`LICENSE` and `NOTICE` are attached from 1.0.2 on; 1.0.0 and 1.0.1 were published without them, and for those the licence is the `LICENSE` file in this repository.
+
 ## 1. Check what you downloaded
 
 ```bash
-sha256sum -c --ignore-missing SHA256SUMS
+grep '  yggaro-server-linux-amd64$' SHA256SUMS | sha256sum -c -
 ```
 
-`--ignore-missing` matters: `SHA256SUMS` covers the whole release and you probably downloaded only the binary, not the provenance and SBOM alongside it. Without it you will see `No such file or directory` for the files you did not take, and that is not a failure.
+It must print `yggaro-server-linux-amd64: OK`. The command checks exactly the file you are about to run: `SHA256SUMS` lists every file of the release, and a plain `sha256sum -c --ignore-missing SHA256SUMS` can finish successfully without having checked the binary at all — for example when the downloaded file has a different name. Check any other file you downloaded the same way, with its own name in the pattern.
+
+The checksums prove integrity — that the file is the one listed — not who made it. Take `SHA256SUMS` from the same GitHub release page you trust.
 
 Then confirm the binary agrees:
 
@@ -33,8 +40,8 @@ The version it prints is compiled in, together with the commit. A binary that di
 
 ```json
 {
-  "version": "1.0.0",
-  "tag": "v1.0.0",
+  "version": "1.0.2",
+  "tag": "v1.0.2",
   "commit": "…",
   "cleanTree": true,
   "builtAt": "…",
@@ -69,7 +76,7 @@ An SBOM tells you what was included on the day it was built. It does not stay tr
 
 There is no code signature on the binaries for this edition yet, and no external penetration test or formal certification.
 
-**1.0.0 ships `linux/amd64` only.** We build arm64 internally, but we do not publish it: an artifact named like the others implies a level of support we cannot honour yet, and a sentence in the documentation is weaker than the expectation the file itself creates. If you need arm64, tell us — knowing that someone actually wants it is what would move it up the list.
+**The 1.0.x releases ship `linux/amd64` only.** We build arm64 internally, but we do not publish it: an artifact named like the others implies a level of support we cannot honour yet, and a sentence in the documentation is weaker than the expectation the file itself creates. If you need arm64, tell us — knowing that someone actually wants it is what would move it up the list.
 
 Where any of this matters to you, say so; it helps us order the work.
 

@@ -12,7 +12,7 @@
 
 **Can I back up or export?** Yes. See [backup and restore](backup-restore.md); the server also provides a readable ZIP export.
 
-**Supported self-host platform?** Ubuntu 24.04 on `linux-amd64` for 1.0.0, unless release notes say otherwise.
+**Supported self-host platform?** Ubuntu 24.04 on `linux-amd64` for the 1.0.x releases, unless release notes say otherwise.
 
 **Does it send anything to you?** No. There is no telemetry, no analytics and no update check, and no setting that turns one on. The only connection it makes on its own is to Let's Encrypt for its certificate. See [data and privacy](data-and-privacy.md).
 
@@ -22,6 +22,6 @@
 
 **How big a machine do we need?** A small one: 2 vCPU and 4 GB RAM serves a normal team. This edition scales by giving each organisation its own instance rather than by clustering one.
 
-**What is not in 1.0.0?** Orders can be created and changed in the application, but through MCP they are read-only for now, and projects can be created but not listed or updated — the [MCP roadmap](mcp-roadmap.md) says what comes next and in what order. Mesh and Lite AI are separate products with no release date. The binaries are checksummed but not code-signed.
+**What is not in 1.0.x yet?** Orders can be created and changed in the application, but through MCP they are read-only for now, and projects can be created but not listed or updated — the [MCP roadmap](mcp-roadmap.md) says what comes next and in what order. Mesh and Lite AI are separate products with no release date. The binaries are checksummed but not code-signed.
 
 **Help?** See [SUPPORT.md](../SUPPORT.md). Report security issues privately.
