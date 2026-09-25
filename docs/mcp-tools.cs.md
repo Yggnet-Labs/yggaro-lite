@@ -22,9 +22,12 @@ Tři nezávislé vrstvy, ne jedna:
    Ke které třídě nástroj patří, říkají nadpisy níže.
 
 Navíc: rozsah přístupu je vždy dán právy **uživatele, pod jehož účtem je klient připojen** —
-žádný zvláštní „AI účet" s vlastními právy neexistuje. Každé úspěšné volání zapisuje do
-bezpečnostního logu doklad o výdeji dat (nástroj, třída, počet objektů, počet bajtů, otisk —
-obsah ne). Každý zápis je v auditu změn s identifikátorem mandátu.
+žádný zvláštní „AI účet" s vlastními právy neexistuje. Po úspěšném volání nástroje (`tools/call`)
+server zapíše do bezpečnostního logu doklad o výdeji dat (nástroj, třída, počet objektů, počet
+bajtů, otisk — obsah ne). Neúspěšné volání zapíše záznam o odmítnutí; výpis nástrojů a další
+protokolové zprávy záznam nevytvářejí. Zápis do logu výsledek volání neblokuje: když se nepodaří,
+volání se nezastaví a chyba skončí jen v diagnostice serveru. Každý zápis dat je v auditu změn
+s identifikátorem mandátu.
 
 ## Čtení (33)
 
