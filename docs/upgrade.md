@@ -12,10 +12,13 @@ install -m 755 yggaro-server-linux-amd64 /opt/yggaro/yggaro-server
 systemctl start yggaro-server
 timeout 90 bash -c 'until curl -fsS https://lite.example.com/healthz; do sleep 3; done'
 STEP
-journalctl -u yggaro-server --since '10 minutes ago'
 ```
 
-The block stops at the first failure: with a checksum that does not match, the running service is not even stopped.
+The block stops at the first failure: with a checksum that does not match, the running service is not even stopped. To see what the service did after the start (for example when the block stopped on the health check), read its log:
+
+```bash
+journalctl -u yggaro-server --since '10 minutes ago'
+```
 
 Confirm the version, login and a representative read/write path. If smoke checks fail, restore the previous binary. Do not put an older database over a migrated database unless release notes explicitly allow it; use the pre-upgrade backup.
 
