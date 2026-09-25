@@ -116,14 +116,16 @@ WantedBy=multi-user.target
 ## 5. Spuštění a první správce
 
 ```bash
+bash -euo pipefail <<'STEP'
 systemctl daemon-reload
 systemctl enable --now yggaro-server
 timeout 90 bash -c 'until curl -fsS https://lite.example.cz/healthz; do sleep 3; done'
-systemctl status yggaro-server
+systemctl status yggaro-server --no-pager
 ps -o user=,pid=,args= -C yggaro-server
+STEP
 ```
 
-Při prvním startu si server vyžádá certifikát od Let's Encrypt, což může trvat až minutu; řádek s `until` na něj počká a po 90 sekundách to vzdá. `ps` musí ukázat `yggaro`, ne `root`. Otevřete HTTPS adresu; průvodce se zeptá na aktivační token:
+Při prvním startu si server vyžádá certifikát od Let's Encrypt, což může trvat až minutu; řádek s `until` na něj počká a po 90 sekundách celý blok zastaví chybou, takže nic za ním neproběhne. `ps` musí ukázat `yggaro`, ne `root`. Otevřete HTTPS adresu; průvodce se zeptá na aktivační token:
 
 ```bash
 sed -n 's/^YGGARO_BOOTSTRAP_TOKEN=//p' /etc/yggaro-server.env

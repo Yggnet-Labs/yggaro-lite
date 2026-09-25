@@ -116,14 +116,16 @@ WantedBy=multi-user.target
 ## 5. Start and create the first administrator
 
 ```bash
+bash -euo pipefail <<'STEP'
 systemctl daemon-reload
 systemctl enable --now yggaro-server
 timeout 90 bash -c 'until curl -fsS https://lite.example.com/healthz; do sleep 3; done'
-systemctl status yggaro-server
+systemctl status yggaro-server --no-pager
 ps -o user=,pid=,args= -C yggaro-server
+STEP
 ```
 
-On the first start the server obtains its certificate from Let's Encrypt, which can take up to a minute; the `until` line waits for it and gives up after 90 seconds. `ps` must show `yggaro`, not `root`. Open the HTTPS URL; the setup wizard asks for the activation token:
+On the first start the server obtains its certificate from Let's Encrypt, which can take up to a minute; the `until` line waits for it and after 90 seconds stops the whole block with an error, so nothing below it runs. `ps` must show `yggaro`, not `root`. Open the HTTPS URL; the setup wizard asks for the activation token:
 
 ```bash
 sed -n 's/^YGGARO_BOOTSTRAP_TOKEN=//p' /etc/yggaro-server.env

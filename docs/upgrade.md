@@ -10,8 +10,8 @@ cp -p /opt/yggaro/yggaro-server /opt/yggaro/yggaro-server.previous
 install -m 755 yggaro-server-linux-amd64 /opt/yggaro/yggaro-server
 /opt/yggaro/yggaro-server -version
 systemctl start yggaro-server
-STEP
 timeout 90 bash -c 'until curl -fsS https://lite.example.com/healthz; do sleep 3; done'
+STEP
 journalctl -u yggaro-server --since '10 minutes ago'
 ```
 
@@ -83,19 +83,18 @@ The block stops before touching the running service when the checksum does not m
 Replace `/etc/systemd/system/yggaro-server.service` with the unit from [install, step 4](install.md#4-systemd-service), keeping your own `-domain` and `-acme-email`. Install the `yggaro-admin` helper from [step 6](install.md#6-maintenance-commands-run-as-the-service-account). Then:
 
 ```bash
+bash -euo pipefail <<'STEP'
 systemctl daemon-reload
 systemctl start yggaro-server
 timeout 90 bash -c 'until curl -fsS https://lite.example.com/healthz; do sleep 3; done'
-systemctl status yggaro-server
+systemctl status yggaro-server --no-pager
 ps -o user=,pid=,args= -C yggaro-server
-bash -euo pipefail <<'CHECK'
 R=$(mktemp -d /var/lib/yggaro-restore-check.XXXXXX)
 trap 'rm -rf -- "$R"' EXIT
 chown yggaro:yggaro "$R"
 yggaro-admin -backup "$R/yggaro.db"
 yggaro-admin -data "$R" -verify-restore
-CHECK
-curl -fsS https://lite.example.com/healthz
+STEP
 ```
 
 The restore check above reads a fresh snapshot, not the running database; it checks database readability, not attachments or business completeness. Its temporary directory is removed on success or failure. `ps` must show `yggaro`. If the service ends in `failed`, `journalctl -u yggaro-server -n 20` states the reason in one message and systemd does not keep restarting it (exit code `78`); see [troubleshooting](troubleshooting.md#the-server-will-not-start).
