@@ -10,7 +10,7 @@ Tento repozitář obsahuje **serverovou edici**. Jedna instance slouží jedné 
 
 *Vyzkoušejte si to bez instalace: [ukazka.yggarolite.cz](https://ukazka.yggarolite.cz) — ukázka jen ke čtení, s vymyšlenými daty. Přihlášení `ukazka@yggarolite.cz` / `UkazkaYggaro2026`.*
 
-> **Rozsah produktu:** Yggaro Lite Server směřuje k první produkční verzi `1.0.0`. Mesh (peer-to-peer edice pro desktop/LAN) a Lite AI (AI uvnitř aplikace) jsou jiné, odložené produkty. U žádného neslibujeme termín.
+> **Rozsah produktu:** Vydaný produkt je **serverová binárka** na stránce [Releases](https://github.com/Yggnet-Labs/yggaro-lite/releases). Zdrojový kód aplikace v tomhle repozitáři není. Mesh (peer-to-peer edice pro desktop/LAN) a Lite AI (AI uvnitř aplikace) jsou jiné, odložené produkty a součástí tohohle stažení nejsou. U žádného neslibujeme termín.
 
 ## Proč ho týmy používají
 
@@ -32,14 +32,7 @@ Snímky jsou z veřejné ukázky, data jsou vymyšlená.
 
 ## Self-host stručně
 
-Podporovaný cíl prvního vydání je Ubuntu 24.04 na `linux-amd64`, veřejná doména a porty 80/443. Stáhněte binárku vydání a `SHA256SUMS`, ověřte je a pokračujte [českým instalačním návodem](docs/install.cs.md).
-
-```bash
-sha256sum -c SHA256SUMS
-./yggaro-server -version
-```
-
-Nenasazujte náhodnou větev ani automatický zdrojový archiv GitHubu. Po vydání `1.0.0` používejte jeho artefakty s kontrolními součty.
+Podporovaný cíl je Ubuntu 24.04 na `linux-amd64`, veřejná doména a porty 80/443. Stáhněte vydání ze stránky [Releases](https://github.com/Yggnet-Labs/yggaro-lite/releases). Soubor serveru se jmenuje `yggaro-server-linux-amd64`. Kontrolní součet právě toho souboru, právo ke spuštění a start jsou v [českém instalačním návodu](docs/install.cs.md). Tahle stránka ty příkazy neopakuje. Nenasazujte náhodnou větev ani automatický zdrojový archiv GitHubu. Ten archiv není zdroj aplikace.
 
 ## Dokumentace
 
@@ -55,10 +48,10 @@ Nenasazujte náhodnou větev ani automatický zdrojový archiv GitHubu. Po vydá
 
 ## Licence
 
-Yggaro Lite je **source-available, nikoli OSI open source**, pod FSL-1.1-ALv2. Vlastní interní provoz, studium a úpravy jsou povolené; nabízet konkurenční komerční službu třetím stranám ne. Čtěte [LICENSE](LICENSE) a [NOTICE](NOTICE). Rozhoduje úplný text licence, ne toto shrnutí.
+Tenhle repozitář zveřejňuje dokumentaci a serverovou binárku, ne zdrojový kód aplikace. Binárka se nabízí pod licencí přiloženou k vydání (FSL-1.1-ALv2). Ta licence není OSI open source. Nabízet produkt jako konkurenční komerční službu třetím stranám se nesmí. Tahle stránka neslibuje, že si přečtete nebo upravíte zdroj aplikace. Ve stažení není. Čtěte [LICENSE](LICENSE) a [NOTICE](NOTICE). Kde se shrnutí a licence rozejdou, platí licence.
 
 ## Vývoj
 
-Zdrojový strom zatím v tomhle repozitáři není — najdete tu dokumentaci a vydání. Než přibude, jsou issues a dotazy vítané, ale pull request nemá co přeložit.
+Zdrojový kód aplikace v tomhle repozitáři zveřejněný není. Jsou tu dokumentace a vydání. Issues a dotazy jsou vítané, ale pull request nemá co přeložit. Není to slib, že zdroj později zveřejníme.
 
 Jak budeme příspěvky přijímat, popisuje [CONTRIBUTING.md](CONTRIBUTING.md). Zranitelnosti hlaste soukromě podle [SECURITY.md](SECURITY.md).
