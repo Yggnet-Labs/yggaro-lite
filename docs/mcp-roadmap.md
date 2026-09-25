@@ -16,8 +16,8 @@ security log. The complete list and the limits are in [tools and limits](mcp-too
 One batch, not a drip. It contains two things:
 
 **1 · Fuller writing for orders.** Today's largest gap: the assistant can create a new order and
-work inside it, but cannot change the core details of an existing one (name, client, manager,
-process). We intend to add changing an order's core details, updating a milestone, uploading a
+work with the parts of an existing one (gates, milestones, risks, deliverables, meeting notes), but
+cannot change the order's own details, such as its name, client or manager. We intend to add changing an order's core details, updating a milestone, uploading a
 file and approving a document version.
 
 **2 · A guide for the connected AI.** So that an assistant can walk a new administrator through

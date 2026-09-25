@@ -15,8 +15,9 @@ logu. Úplný seznam i meze jsou v [nástrojích a mezích](mcp-tools.cs.md).
 
 Jedna dávka, ne postupné kapání. Obsahuje dvě věci:
 
-**1 · Úplnější zápis u zakázek.** Dnes největší mezera: novou zakázku asistent založí a uvnitř
-ní pracuje, ale základní údaje existující zakázky (název, klient, vedoucí, proces) nezmění.
+**1 · Úplnější zápis u zakázek.** Dnes největší mezera: novou zakázku asistent založí a v existující
+pracuje s jejími částmi (brány, milníky, rizika, výstupy, zápisy z porad), ale samotné údaje
+zakázky, třeba název, klienta nebo vedoucího, nezmění.
 Chystáme změnu základních údajů zakázky, úpravu milníku, nahrání souboru a schválení verze
 dokumentu.
 
