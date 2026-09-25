@@ -11,7 +11,7 @@ install -m 755 yggaro-server-linux-amd64 /opt/yggaro/yggaro-server
 /opt/yggaro/yggaro-server -version
 systemctl start yggaro-server
 STEP
-curl -fsS https://lite.example.com/healthz
+timeout 90 bash -c 'until curl -fsS https://lite.example.com/healthz; do sleep 3; done'
 journalctl -u yggaro-server --since '10 minutes ago'
 ```
 
@@ -59,7 +59,7 @@ if [ -d /var/lib/yggaro-keys ]; then cp -a /var/lib/yggaro-keys "$R/keys"; else 
 STEP
 ```
 
-It must end with `✓ Databáze se otevřela a je čitelná.` The drill runs on a copy, with a copy of the key directory, so it cannot change the live instance. `$B` now holds the database snapshot, attachments, key directory, environment file, binary and unit — **copy it off the machine**; the environment file contains the passphrase.
+It must end with `✓ Databáze se otevřela a je čitelná.` On an installation **without** a passphrase the old binary also prints a warning to set `YGGARO_DB_PASSPHRASE`; ignore it here — for such an installation 1.0.2 is confirmed with `YGGARO_ALLOW_LOCAL_KEY=1`, and adding a passphrase would make the existing data unreadable (see above). The drill runs on a copy, with a copy of the key directory, so it cannot change the live instance. `$B` now holds the database snapshot, attachments, key directory, environment file, binary and unit — **copy it off the machine**; the environment file contains the passphrase.
 
 ### Migration
 
@@ -85,6 +85,7 @@ Replace `/etc/systemd/system/yggaro-server.service` with the unit from [install,
 ```bash
 systemctl daemon-reload
 systemctl start yggaro-server
+timeout 90 bash -c 'until curl -fsS https://lite.example.com/healthz; do sleep 3; done'
 systemctl status yggaro-server
 ps -o user=,pid=,args= -C yggaro-server
 bash -euo pipefail <<'CHECK'
