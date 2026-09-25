@@ -4,7 +4,7 @@ Verze se řídí schématem `MAJOR.MINOR.PATCH` ([VERSIONING](VERSIONING.md)). V
 kterou máte, vypíše `yggaro-server -version`; totéž vrací `/healthz`. Jak ověřit
 stažené vydání: [release-verification](docs/release-verification.md).
 
-## [1.0.2] — připravuje se
+## [1.0.2] — 25. 9. 2026
 
 **Serverová edice odmítne nebezpečnou konfiguraci, místo aby ji potichu přijala.**
 Obojí dokumentace od 1.0.0 označovala za povinné, kód to ale nevynucoval:
