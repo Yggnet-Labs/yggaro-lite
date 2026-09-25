@@ -4,7 +4,7 @@
 
 Našli jste bezpečnostní chybu? **Nezakládejte veřejný issue.**
 
-Napište na **[security@yggnet.cz](mailto:security@yggnet.cz)**. Do prvního
+Napište na **[security@yggarolite.cz](mailto:security@yggarolite.cz)**. Do prvního
 hlášení patří popis dopadu a bezpečná reprodukce na syntetických datech.
 Neposílejte hesla, tokeny, privátní klíče, databáze ani zákaznické údaje.
 Pokud jsou pro ověření potřeba citlivé podklady, nejprve si s námi domluvte
@@ -35,7 +35,7 @@ v poznámkách k vydání, pokud si to přejete.
 ## Reporting in English
 
 Do not open a public issue for a vulnerability. Email
-[security@yggnet.cz](mailto:security@yggnet.cz) with the affected edition,
+[security@yggarolite.cz](mailto:security@yggarolite.cz) with the affected edition,
 version, impact and safe reproduction steps using synthetic data. Do not
 send passwords, tokens, private keys, databases or customer information.
 Agree on a transfer method with us before sharing sensitive evidence;

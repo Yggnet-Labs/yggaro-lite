@@ -8,7 +8,7 @@ For hosted service, licensing or paid support, contact [info@yggarolite.cz](mail
 
 ## Security
 
-Do **not** open a public issue. Follow [SECURITY.md](SECURITY.md) and write to [security@yggnet.cz](mailto:security@yggnet.cz).
+Do **not** open a public issue. Follow [SECURITY.md](SECURITY.md) and write to [security@yggarolite.cz](mailto:security@yggarolite.cz).
 
 ## What we can support
 
