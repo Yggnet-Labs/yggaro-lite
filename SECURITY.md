@@ -28,9 +28,9 @@ Pokud můžete, uveďte:
 Jsme malý tým. Neslibujeme reakci do hodin — slibujeme, že vám odpovíme
 člověk a že vás necháme vědět, jak to dopadlo, i když nálezu nedáme za pravdu.
 
-**Prosba:** dejte nám čas na opravu, než to zveřejníte. Nemáme na to formální
-politiku ani odměny; spoléháme na slušnost a oplácíme ji tím, že vás uvedeme
-v poznámkách k vydání, pokud si to přejete.
+**Zveřejnění nálezu:** smíte ho zveřejnit za **90 dní od nahlášení**, nebo
+dřív, jakmile vyjde oprava. Do té doby ho prosíme nezveřejňovat. Odměny
+nemáme; v poznámkách k vydání vás uvedeme, pokud si to přejete.
 
 ## Reporting in English
 
@@ -40,6 +40,11 @@ version, impact and safe reproduction steps using synthetic data. Do not
 send passwords, tokens, private keys, databases or customer information.
 Agree on a transfer method with us before sharing sensitive evidence;
 ordinary email is not a promise of end-to-end encryption.
+
+**Disclosure:** you may publish a report **90 days after you report it to
+us**, or sooner once a fix is released. Please do not publish it before
+then. We do not offer bounties. We will credit you in the release notes
+if you ask.
 
 ## Co je a co není zranitelnost
 
