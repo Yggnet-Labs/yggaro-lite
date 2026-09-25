@@ -24,8 +24,9 @@ Three independent layers, not one:
 Beyond that, access always follows the permissions of **the user the client connects as** —
 there is no separate "AI account" with rights of its own. After a successful tool call
 (`tools/call`) the server writes a disclosure record to the security log (tool, class, object count,
-byte count, hash — never the content). A failed call writes a denial record; listing tools and
-other protocol messages create no record. Writing to the log does not gate the call: if it fails,
+byte count, hash — never the content). A refusal because of a data class outside the mandate, a missing
+confirmation or a tool error is written as a denial; a refusal because of a missing scope or the call
+rate limit, listing tools and other protocol messages create no record. Writing to the log does not gate the call: if it fails,
 the call still goes through and the error only reaches the server diagnostics. Every data write
 lands in the change audit together with the mandate identifier.
 
