@@ -5,9 +5,9 @@
 **Bez termínů, záměrně.** Slíbit datum, které neumíme doložit, je horší než mlčet. Pořadí ale
 říct umíme a držíme se ho.
 
-## Dnes — vydání 1.0.0
+## Dnes — řada 1.0
 
-56 nástrojů (33 čtení, 23 zápis), vlastní OAuth, mandáty s platností a okamžitou revokací,
+56 nástrojů (33 čtení, 23 zápis), vlastní OAuth, mandáty s výchozí platností a okamžitou revokací,
 omezení na třídy dat, potvrzení u šesti high-impact akcí, doklad o výdeji dat v bezpečnostním
 logu. Úplný seznam i meze jsou v [nástrojích a mezích](mcp-tools.cs.md).
 
@@ -15,9 +15,10 @@ logu. Úplný seznam i meze jsou v [nástrojích a mezích](mcp-tools.cs.md).
 
 Jedna dávka, ne postupné kapání. Obsahuje dvě věci:
 
-**1 · Zápis u zakázek a projektů.** Dnes největší mezera: produkt na řízení zakázek má zakázku
-přes MCP jen ke čtení. Chystáme založení a změnu zakázky, výpis a úpravu projektu, úpravu
-milníku, nahrání souboru, uzavření rizika, odmítnutí dodávky a schválení verze dokumentu.
+**1 · Úplnější zápis u zakázek.** Dnes největší mezera: novou zakázku asistent založí a uvnitř
+ní pracuje, ale základní údaje existující zakázky (název, klient, vedoucí, proces) nezmění.
+Chystáme změnu základních údajů zakázky, úpravu milníku, nahrání souboru a schválení verze
+dokumentu.
 
 **2 · Průvodce pro připojenou AI.** Aby asistent uměl nového správce provést nastavením —
 jak založit bránu, jak z ní udělat šablonu, jak nastavit práva — a nemusel to člověk hledat
@@ -28,7 +29,7 @@ chybí obsah průvodce a zápis u bran a šablon.
 
 Tohle se plete, tak to říkáme rovnou. **MCP není „Yggaro Lite AI".**
 
-- **Yggaro Lite (dnes, 1.0.0)** — produkt vystavuje rozhraní MCP. AI si připojíte **vy**,
+- **Yggaro Lite (dnes, řada 1.0)** — produkt vystavuje rozhraní MCP. AI si připojíte **vy**,
   je **vaše**, běží na vašem účtu a na vaše náklady. Uvnitř produktu žádný model není.
 - **Yggaro Lite AI (chystáme)** — **tentýž produkt**, ve kterém navíc pracují **agenti
   uvnitř**: automatizují rutinu, vyhodnocují a navrhují. MCP zůstane k dispozici, takže

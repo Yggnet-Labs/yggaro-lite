@@ -5,9 +5,9 @@
 **No dates, deliberately.** Promising a date we cannot stand behind is worse than saying nothing.
 The order, however, we can state — and we hold to it.
 
-## Today — release 1.0.0
+## Today — the 1.0 series
 
-56 tools (33 read, 23 write), built-in OAuth, mandates with an expiry and immediate revocation,
+56 tools (33 read, 23 write), built-in OAuth, mandates with a default expiry and immediate revocation,
 restriction to data classes, confirmation on six high-impact actions, a disclosure record in the
 security log. The complete list and the limits are in [tools and limits](mcp-tools.md).
 
@@ -15,10 +15,10 @@ security log. The complete list and the limits are in [tools and limits](mcp-too
 
 One batch, not a drip. It contains two things:
 
-**1 · Writing for orders and projects.** Today's largest gap: a product for running client work
-exposes the order itself as read-only over MCP. We intend to add creating and changing an order,
-listing and updating a project, updating a milestone, uploading a file, closing a risk, rejecting
-a delivery and approving a document version.
+**1 · Fuller writing for orders.** Today's largest gap: the assistant can create a new order and
+work inside it, but cannot change the core details of an existing one (name, client, manager,
+process). We intend to add changing an order's core details, updating a milestone, uploading a
+file and approving a document version.
 
 **2 · A guide for the connected AI.** So that an assistant can walk a new administrator through
 setup — how to create a gate, how to turn it into a template, how to set permissions — instead of
@@ -30,7 +30,7 @@ gates and templates.
 
 This gets confused, so we say it plainly. **MCP is not "Yggaro Lite AI".**
 
-- **Yggaro Lite (today, 1.0.0)** — the product exposes an MCP endpoint. **You** connect the
+- **Yggaro Lite (today, the 1.0 series)** — the product exposes an MCP endpoint. **You** connect the
   AI, it is **yours**, it runs on your account and at your cost. No model lives inside the
   product.
 - **Yggaro Lite AI (forthcoming)** — **the same product**, with agents working **inside** it:
