@@ -41,6 +41,14 @@ založil. Nově `-backup`, `-verify-restore`, `-export`, `-reset-password`,
 založená instance, jinak skončí chybou. `-verify-restore` je jen pro čtení
 a dešifruje **všechny** uložené hodnoty, ne vzorek; přílohy neověřuje a říká to.
 
+**Vynucené dvoufázové ověření platí i pro připojení aplikací.** Když organizace
+vyžaduje 2FA a uživatel ho ještě nemá nastavené, smí po přihlášení heslem jen
+dokončit jeho nastavení. Obrazovka souhlasu vestavěného OAuth serveru to
+nekontrolovala: uživatel s vydaným MCP mandátem tak mohl připojit aplikaci (např.
+Claude) a přes MCP číst data dřív, než 2FA dokončil. Nově dostane vysvětlení ve
+svém jazyce a souhlas nejde udělit ani přímým odesláním formuláře. Dřív vydané
+tokeny tahle změna neruší.
+
 **Vydání nese licenci produktu.** `LICENSE` a `NOTICE` jsou přílohou vydání
 pokrytou `SHA256SUMS`. `-third-party-notices` tiskne aktuální oznámení třetích
 stran (1.0.1 tiskla text z 1.0.0); vydání se nepostaví, když se text v binárce
