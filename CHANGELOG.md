@@ -6,17 +6,18 @@ stažené vydání: [release-verification](docs/release-verification.md).
 
 ## [1.0.3] — 26. 9. 2026
 
-**Úplný export funguje i na instancích, kde se používají diskuse.** Ve verzi 1.0.2
-(i 1.0.1) skončil export z administrace (`POST /api/admin/export`) i z příkazové
-řádky (`-export`) chybou „export je nekompletní“, jakmile na instanci někdo otevřel
-diskusní vlákno: aplikace si ukládá osobní stav přečtení a export tento druh dat
-neměl zařazený. Export je navržený tak, aby raději odmítl celý balík, než aby tiše
-vynechal data — neúplný ZIP proto nikdy neodešel, ale export nešel stáhnout vůbec.
+**Úplný export funguje i na instancích, kde se používají diskuse.** Ve verzích
+1.0.0 až 1.0.2 selhal export dat, jakmile na instanci někdo otevřel diskusní
+vlákno: aplikace si ukládá osobní stav přečtení a export tento druh dat neměl
+zařazený. Z administrace (`POST /api/admin/export`) export nešel stáhnout vůbec
+(HTTP 500 „export je nekompletní“); příkazová řádka (`-export`) skončila chybovým
+kódem a balík byl označený jako neúplný (bez stavu přečtení).
 
-* Stav přečtení diskusí se nově exportuje (`data/readmark.json`) a export je úplný
-  (`manifest.json` → `complete: true`).
-* Nový test hlídá, že export zná každý druh dat, který server nebo aplikace
-  zapisuje; stejná chyba se tak nemůže vrátit nepozorovaně.
+* Stav přečtení diskusí všech uživatelů se nově exportuje (`data/readmark.json`)
+  a export je úplný (`manifest.json` → `complete: true`).
+* Nový test prochází zdrojový kód serveru i webového rozhraní a selže, pokud v něm
+  přibude druh dat bez vědomého zařazení do exportu. Návrat téže chyby z nového
+  kódu tím výrazně ztěžuje.
 
 **Co to znamená při aktualizaci:** data ani konfigurace se nemění, stačí vyměnit
 binárku. Návrat na 1.0.2 je opět jen výměnou binárky. Postup: [upgrade](docs/upgrade.md).

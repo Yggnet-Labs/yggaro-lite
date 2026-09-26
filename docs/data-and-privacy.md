@@ -60,7 +60,7 @@ Two routes, one implementation, so both give the same package:
 yggaro-admin -export /srv/export/yggaro-export.zip
 ```
 
-The ZIP contains `data/<entity>.json` for every exported entity, `files/` with attachments under their original names, and `manifest.json` stating exactly what is inside and how many records of each kind. It is plain JSON: readable without us, and without this software.
+The ZIP contains `data/<entity>.json` for every exported entity, `files/` with attachments under their original names, and `manifest.json` stating exactly what is inside and how many records of each kind. It is plain JSON: readable without us, and without this software. From 1.0.3 it also contains every user's read state of discussions (`data/readmark.json`: who has read which thread up to which message) — the administrator who downloads the export sees it for all users, which the application itself does not show.
 
 The in-application route is deliberately harder to trigger than an ordinary read, because one call takes the whole contents of the company: it needs an administrator who additionally holds the `data.export.full` right, a re-entry of the password, and a valid CSRF header. It builds the package from a consistent snapshot into a temporary file and verifies completeness before sending, so a truncated export is never served as success. Concurrent exports get `429`.
 

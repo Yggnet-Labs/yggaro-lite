@@ -60,7 +60,7 @@ Dvě cesty, jedna implementace, takže obě dají tentýž balík:
 yggaro-admin -export /srv/export/yggaro-export.zip
 ```
 
-V ZIPu je `data/<entita>.json` pro každou exportovanou entitu, `files/` s přílohami pod původními jmény a `manifest.json`, který přesně říká, co uvnitř je a kolik čeho. Je to obyčejný JSON: čitelný bez nás a bez tohohle softwaru.
+V ZIPu je `data/<entita>.json` pro každou exportovanou entitu, `files/` s přílohami pod původními jmény a `manifest.json`, který přesně říká, co uvnitř je a kolik čeho. Je to obyčejný JSON: čitelný bez nás a bez tohohle softwaru. Od 1.0.3 v něm je i stav přečtení diskusí všech uživatelů (`data/readmark.json`: kdo má které vlákno přečtené po kterou zprávu) — správce, který export stáhne, ho tak vidí u všech uživatelů, což aplikace sama neukazuje.
 
 Cesta z aplikace je záměrně těžší než běžné čtení, protože jedním voláním odchází celý obsah firmy: chce správce, který navíc drží právo `data.export.full`, znovuzadání hesla a platnou hlavičku CSRF. Balík se sestaví z konzistentního snímku do dočasného souboru, ověří se úplnost, a teprve pak se pošle — useknutý export se nikdy neodešle jako úspěch. Souběžný export dostane `429`.
 
