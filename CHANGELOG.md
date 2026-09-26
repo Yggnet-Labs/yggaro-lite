@@ -36,6 +36,7 @@ obsahuje bezpečnostní log.**
 * **Zápis do bezpečnostního logu ze dvou procesů najednou** (server a příkazová
   řádka) už řetěz otisků nerozdvojí.
 * **Export z příkazové řádky serveru se zapíše do bezpečnostního logu instance.**
+  Zapíše se i export odepřený kvůli chybějícímu právu.
 * **Adresa webhooku se už nezapisuje do chyb.** Když se nepovedlo spojení
   s webhookem Teams nebo Discordu, text chyby nesl celou adresu webhooku včetně
   podpisu či tokenu — v odpovědi administraci i v bezpečnostním logu. Nově
