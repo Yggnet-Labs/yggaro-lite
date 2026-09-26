@@ -19,7 +19,7 @@ There is no external database server, no message broker and no cache to operate.
 
 ## What is encrypted at rest
 
-With `YGGARO_DB_PASSPHRASE` set — the production requirement — the content is encrypted with **XChaCha20-Poly1305** under a key held in the key directory and unlocked by the passphrase:
+With `YGGARO_DB_PASSPHRASE` set — the production requirement — the content is encrypted with **XChaCha20-Poly1305** under a key derived from that passphrase (Argon2id); the key itself is not stored anywhere, so whoever holds the passphrase holds the key:
 
 - **business content** — the record values and documents that carry your project, order, risk and decision data;
 - **attachment contents**, with the same key;

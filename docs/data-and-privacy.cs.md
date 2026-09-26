@@ -19,7 +19,7 @@ Všechno, co aplikace ukládá, je na vašem stroji:
 
 ## Co je šifrované v klidu
 
-S nastaveným `YGGARO_DB_PASSPHRASE` — což je požadavek pro ostrý provoz — je obsah šifrovaný algoritmem **XChaCha20-Poly1305** klíčem, který leží v adresáři klíčů a odemyká ho heslo:
+S nastaveným `YGGARO_DB_PASSPHRASE` — což je požadavek pro ostrý provoz — je obsah šifrovaný algoritmem **XChaCha20-Poly1305** klíčem odvozeným z tohoto hesla (Argon2id); samotný klíč se nikam neukládá, takže kdo má heslo, má klíč:
 
 - **obsah** — hodnoty záznamů a dokumenty, tedy vaše projekty, zakázky, rizika a rozhodnutí;
 - **obsah příloh**, týmž klíčem;
