@@ -28,6 +28,10 @@ obsahuje bezpečnostní log.**
   zůstává jen jméno serveru. Starší záznamy v logu se nemění (řetěz otisků se
   nepřepisuje) a s logem jdou i do exportu; kdo takovou chybu viděl, má webhook
   vyměnit.
+* **Chyby cizích služeb jdou do bezpečnostního logu zkrácené.** U odmítnutých
+  volání MCP nástrojů, u SharePointu (Microsoft Graph) a u notifikací se do logu
+  zapisuje druh chyby a jméno serveru, ne celé adresy ani tělo odpovědi
+  přihlašovací služby.
 * Nový test prochází zdrojový kód serveru i webového rozhraní a selže, když v něm
   přibude přímo zapsaný název druhu dat, který není vědomě zařazený do exportu.
   Název předaný přes konstantu nebo zapsaný ve dvojitých uvozovkách v rozhraní
