@@ -22,14 +22,15 @@ obsahuje bezpečnostní log.**
   s IP adresou, změny práv a hesel, exporty, přístupy integrací. Záznamy jsou
   řetězené otiskem (SHA-256), README v balíku popisuje, jak si řetěz přepočítat,
   a `manifest.json` → `security_log` uvádí počet záznamů a zda je řetěz neporušený.
-  Log obsahuje celou historii i IP adresy a zadané identifikátory lidí, kteří
-  uživateli nejsou. Úplný export proto nově vyžaduje i právo číst bezpečnostní
+  Log obsahuje celou historii i IP adresy lidí, kteří uživateli nejsou. Úplný export proto nově vyžaduje i právo číst bezpečnostní
   log (`audit.view`). Řetěz odhalí změnu, vložení či vyjmutí záznamu uprostřed;
   useknutí posledních záznamů ani přepočítání celého logu neodhalí.
 * **Heslo omylem napsané do pole e-mail se už do logu nezapíše.** Neúspěšné
   přihlášení k neexistujícímu účtu (a neúspěšná obnova hesla) zapisovalo
-  doslova, co kdo napsal do pole „e-mail“. Nově jen text ve tvaru e-mailu,
-  jinak jeho délku; každý záznam má omezenou délku. Starší záznamy se nemění.
+  doslova, co kdo napsal do pole „e-mail“. Nově se zapíše jen délka zadaného
+  textu; každý záznam má omezenou délku. Starší záznamy se nemění — export
+  vyjmenuje ty, kde text e-mailem není (`security_log.typed_text_seqs`).
+* **Export z příkazové řádky serveru se zapíše do bezpečnostního logu instance.**
 * **Adresa webhooku se už nezapisuje do chyb.** Když se nepovedlo spojení
   s webhookem Teams nebo Discordu, text chyby nesl celou adresu webhooku včetně
   podpisu či tokenu — v odpovědi administraci i v bezpečnostním logu. Nově
