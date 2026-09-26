@@ -24,7 +24,7 @@ Confirm the version, login and a representative read/write path. If smoke checks
 
 ## From 1.0.2 to 1.0.3
 
-1.0.3 fixes the full export on instances where discussions are used: it no longer fails with "export is incomplete" after someone opened a discussion thread. Nothing else changes — no data migration, no new configuration. Replace the binary with the block above; rolling back to 1.0.2 is the same binary swap.
+1.0.3 fixes the full export on instances where discussions are used: it no longer fails with "export is incomplete" because someone opened a discussion thread. The export now also contains the whole security log (`data/_security_log.json`, hash-chained), and a failed connection to a Teams or Discord webhook no longer writes the webhook URL into the error text. No data migration, no new configuration. Replace the binary with the block above; rolling back to 1.0.2 is the same binary swap.
 
 ## From 1.0.0 or 1.0.1 to 1.0.2
 

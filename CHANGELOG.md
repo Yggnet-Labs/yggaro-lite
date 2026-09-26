@@ -6,18 +6,32 @@ stažené vydání: [release-verification](docs/release-verification.md).
 
 ## [1.0.3] — 26. 9. 2026
 
-**Úplný export funguje i na instancích, kde se používají diskuse.** Ve verzích
-1.0.0 až 1.0.2 selhal export dat, jakmile na instanci někdo otevřel diskusní
-vlákno: aplikace si ukládá osobní stav přečtení a export tento druh dat neměl
-zařazený. Z administrace (`POST /api/admin/export`) export nešel stáhnout vůbec
-(HTTP 500 „export je nekompletní“); příkazová řádka (`-export`) skončila chybovým
-kódem a balík byl označený jako neúplný (bez stavu přečtení).
+**Úplný export funguje i na instancích, kde se používají diskuse, a nově
+obsahuje bezpečnostní log.**
 
-* Stav přečtení diskusí všech uživatelů se nově exportuje (`data/readmark.json`)
-  a export je úplný (`manifest.json` → `complete: true`).
-* Nový test prochází zdrojový kód serveru i webového rozhraní a selže, pokud v něm
-  přibude druh dat bez vědomého zařazení do exportu. Návrat téže chyby z nového
-  kódu tím výrazně ztěžuje.
+* **Export s diskusemi.** Ve verzích 1.0.0 až 1.0.2 selhal export dat, jakmile
+  na instanci někdo otevřel diskusní vlákno: aplikace si ukládá osobní stav
+  přečtení a export tento druh dat neměl zařazený. Z administrace
+  (`POST /api/admin/export`) export nešel stáhnout vůbec (HTTP 500 „export je
+  nekompletní“); příkazová řádka (`-export`) skončila chybovým kódem a balík byl
+  označený jako neúplný (bez stavu přečtení). Stav přečtení diskusí všech
+  uživatelů se nově exportuje (`data/readmark.json`) a export je úplný
+  (`manifest.json` → `complete: true`).
+* **Bezpečnostní log v exportu.** Balík nově obsahuje celý bezpečnostní log
+  instance (`data/_security_log.json`): přihlášení včetně neúspěšných pokusů
+  s IP adresou, změny práv a hesel, exporty, přístupy integrací. Záznamy jsou
+  řetězené otiskem (SHA-256), README v balíku popisuje, jak si řetěz přepočítat,
+  a `manifest.json` → `security_log` uvádí počet záznamů a zda je řetěz neporušený.
+* **Adresa webhooku se už nezapisuje do chyb.** Když se nepovedlo spojení
+  s webhookem Teams nebo Discordu, text chyby nesl celou adresu webhooku včetně
+  podpisu či tokenu — v odpovědi administraci i v bezpečnostním logu. Nově
+  zůstává jen jméno serveru. Starší záznamy v logu se nemění (řetěz otisků se
+  nepřepisuje) a s logem jdou i do exportu; kdo takovou chybu viděl, má webhook
+  vyměnit.
+* Nový test prochází zdrojový kód serveru i webového rozhraní a selže, když v něm
+  přibude přímo zapsaný název druhu dat, který není vědomě zařazený do exportu.
+  Název předaný přes konstantu nebo zapsaný ve dvojitých uvozovkách v rozhraní
+  nepozná — návrat téže chyby ztěžuje, nevylučuje.
 
 **Co to znamená při aktualizaci:** data ani konfigurace se nemění, stačí vyměnit
 binárku. Návrat na 1.0.2 je opět jen výměnou binárky. Postup: [upgrade](docs/upgrade.md).
