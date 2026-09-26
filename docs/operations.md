@@ -42,7 +42,7 @@ yggaro-admin -backup /srv/backup/yggaro-$(date +%F).db
 Accounts, roles and project membership are managed in the application. Two things worth knowing at the operations level:
 
 - The **observer** role can never write. That is enforced in code, not by a permission checkbox someone can tick by accident.
-- **Exporting the whole instance** is a right of its own (`data.export.full`) on top of being an administrator, and it re-asks for the password. Grant it deliberately.
+- **Exporting the whole instance** is a right of its own (`data.export.full`) on top of being an administrator, and it re-asks for the password. From 1.0.3 the export carries the security log, so it also requires `audit.view`. Grant it deliberately.
 
 If an administrator is locked out, recovery requires shell access to the machine and the key — see [troubleshooting](troubleshooting.md).
 
@@ -50,7 +50,7 @@ If an administrator is locked out, recovery requires shell access to the machine
 
 The application keeps an audit trail of who changed what, and alongside it a **security log** covering roughly a hundred kinds of event: sign-ins and every reason a sign-in was refused, role and permission changes, password resets and recovery codes, exports — including the ones that were denied or came out incomplete — file operations, OAuth client lifecycle and replay detection, notification configuration, and MCP mandates, disclosures and refusals.
 
-That log is **hash-chained**: each entry commits to the one before it, so a deleted or edited entry stops the chain verifying. `GET /api/seclog` returns the recent entries together with `intact`, `count` and `brokenSeq`, which is what to watch — an `intact` that turns false is a much stronger signal than anything in the entries themselves. From 1.0.3 the full data export carries the whole log with its chain (`data/_security_log.json`), so it can be verified outside the application.
+That log is **hash-chained**: each entry commits to the one before it, so an entry edited, inserted or removed in the middle stops the chain verifying. The chain does not reveal that the most recent entries were cut off, and it is not signed — someone with access to the database could recompute it whole. `GET /api/seclog` returns the recent entries together with `intact`, `count` and `brokenSeq`, which is what to watch — an `intact` that turns false is a much stronger signal than anything in the entries themselves. From 1.0.3 the full data export carries the whole log with its chain (`data/_security_log.json`), so it can be verified outside the application.
 
 When you enable MCP or put the instance behind a proxy, check that the log shows real client addresses rather than `127.0.0.1`; if it does not, the instance is not trusting your proxy yet.
 

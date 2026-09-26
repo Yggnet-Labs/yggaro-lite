@@ -22,12 +22,21 @@ obsahuje bezpečnostní log.**
   s IP adresou, změny práv a hesel, exporty, přístupy integrací. Záznamy jsou
   řetězené otiskem (SHA-256), README v balíku popisuje, jak si řetěz přepočítat,
   a `manifest.json` → `security_log` uvádí počet záznamů a zda je řetěz neporušený.
+  Log obsahuje celou historii i IP adresy a zadané identifikátory lidí, kteří
+  uživateli nejsou. Úplný export proto nově vyžaduje i právo číst bezpečnostní
+  log (`audit.view`). Řetěz odhalí změnu, vložení či vyjmutí záznamu uprostřed;
+  useknutí posledních záznamů ani přepočítání celého logu neodhalí.
+* **Heslo omylem napsané do pole e-mail se už do logu nezapíše.** Neúspěšné
+  přihlášení k neexistujícímu účtu (a neúspěšná obnova hesla) zapisovalo
+  doslova, co kdo napsal do pole „e-mail“. Nově jen text ve tvaru e-mailu,
+  jinak jeho délku; každý záznam má omezenou délku. Starší záznamy se nemění.
 * **Adresa webhooku se už nezapisuje do chyb.** Když se nepovedlo spojení
   s webhookem Teams nebo Discordu, text chyby nesl celou adresu webhooku včetně
   podpisu či tokenu — v odpovědi administraci i v bezpečnostním logu. Nově
   zůstává jen jméno serveru. Starší záznamy v logu se nemění (řetěz otisků se
-  nepřepisuje) a s logem jdou i do exportu; kdo takovou chybu viděl, má webhook
-  vyměnit.
+  nepřepisuje) a s logem jdou i do exportu. Export je vyjmenuje
+  (`security_log.url_secret_seqs`) a README i příkazová řádka řeknou nahlas,
+  že je třeba webhook vyměnit.
 * **Chyby cizích služeb jdou do bezpečnostního logu zkrácené.** U odmítnutých
   volání MCP nástrojů, u SharePointu (Microsoft Graph) a u notifikací se do logu
   zapisuje druh chyby a jméno serveru, ne celé adresy ani tělo odpovědi
