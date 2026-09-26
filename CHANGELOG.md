@@ -31,7 +31,8 @@ obsahuje bezpečnostní log.**
   textu; každý záznam má omezenou délku. Starší záznamy se nemění — export
   vyjmenuje ty, kde text e-mailem není (`security_log.typed_text_seqs`).
 * **Limit pokusů o přihlášení nejde obejít jiným zápisem téhož e-mailu** (např.
-  „ſ“ místo „s“) — počítá se podle nalezeného účtu. Chyba existovala od 1.0.0.
+  „ſ“ místo „s“) — adresa se pro limit sjednotí stejně jako při hledání účtu,
+  pro existující i neexistující účet stejně. Chyba existovala od 1.0.0.
 * **Zápis do bezpečnostního logu ze dvou procesů najednou** (server a příkazová
   řádka) už řetěz otisků nerozdvojí.
 * **Export z příkazové řádky serveru se zapíše do bezpečnostního logu instance.**
