@@ -68,7 +68,7 @@ If attachments could not be read, the manifest says so and marks the package inc
 
 ## Deleting data
 
-Individual records are deleted in the application. To remove everything, delete the data directory, the key directory and the backups — and destroy the passphrase. Because the content is encrypted under that key, destroying the key and its copies renders the content of any missed copy unreadable — except the security log, which is not encrypted, so delete every copy of it too.
+Individual records are deleted in the application. To remove everything, delete the data directory, the key directory and the backups — and destroy the passphrase. Because the content is encrypted under that key, destroying the key and its copies renders the content of any missed copy unreadable — except the security log, which is not encrypted and is part of every backup of the database, so delete every copy of it too.
 
 The software does not expire or delete anything on its own. Retention is your policy, and your schedule.
 
