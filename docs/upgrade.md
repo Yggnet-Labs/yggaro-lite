@@ -26,6 +26,11 @@ Confirm the version, login and a representative read/write path. If smoke checks
 
 1.0.3 fixes the full export on instances where discussions are used: it no longer fails with "export is incomplete" because someone opened a discussion thread. The export now also contains the whole security log (`data/_security_log.json`, hash-chained), and a failed connection to a Teams or Discord webhook no longer writes the webhook URL into the error text. No data migration, no new configuration. Replace the binary with the block above; rolling back to 1.0.2 is the same binary swap.
 
+Two things to check after the update:
+
+- **The full export now also requires the `audit.view` right**, because the package carries the security log. An administrator who has `data.export.full` but whose `audit.view` was removed gets `403` until it is granted back.
+- **If a notification webhook ever failed to connect on 1.0.2 or earlier**, its full address — including the signature or token — may already be in the security log. The export lists such entries and says so; replace the webhook in Teams or Discord.
+
 ## From 1.0.0 or 1.0.1 to 1.0.2
 
 1.0.2 changes two things that affect an existing installation:

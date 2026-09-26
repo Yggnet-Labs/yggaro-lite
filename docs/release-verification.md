@@ -58,7 +58,7 @@ For a genuine release, three fields must hold: `mode` is `release`, `cleanTree` 
 
 ## 3. Reproducibility
 
-Building the same commit **with the same Go toolchain** produces byte-identical artifacts — both binaries and, because every timestamp and identifier is derived from the commit rather than from the clock, an identical `SHA256SUMS`. So a release can be checked by rebuilding and comparing one file.
+Building the same commit **with the same Go toolchain** produces a byte-identical server binary, because every timestamp and identifier is derived from the commit rather than from the clock. So a release can be checked by rebuilding and comparing the binary's checksum with its line in `SHA256SUMS`. The other files follow the same rule, but the SBOM also records the version of the tool that generated it, so it matches only when that tool matches too.
 
 The toolchain qualifier is not boilerplate. The compiler version affects the binary, and we do not pin the build environment beyond recording it: `PROVENANCE.json` names the exact `goVersion` used, and that is the one to rebuild with. A different Go version may well produce a different, equally valid binary.
 
