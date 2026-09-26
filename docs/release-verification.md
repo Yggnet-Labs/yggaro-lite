@@ -40,8 +40,8 @@ The version it prints is compiled in, together with the commit. A binary that di
 
 ```json
 {
-  "version": "1.0.2",
-  "tag": "v1.0.2",
+  "version": "1.0.3",
+  "tag": "v1.0.3",
   "commit": "…",
   "cleanTree": true,
   "builtAt": "…",

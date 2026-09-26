@@ -22,6 +22,10 @@ journalctl -u yggaro-server --since '10 minutes ago'
 
 Confirm the version, login and a representative read/write path. If smoke checks fail, restore the previous binary. Do not put an older database over a migrated database unless release notes explicitly allow it; use the pre-upgrade backup.
 
+## From 1.0.2 to 1.0.3
+
+1.0.3 fixes the full export on instances where discussions are used: it no longer fails with "export is incomplete" after someone opened a discussion thread. Nothing else changes — no data migration, no new configuration. Replace the binary with the block above; rolling back to 1.0.2 is the same binary swap.
+
 ## From 1.0.0 or 1.0.1 to 1.0.2
 
 1.0.2 changes two things that affect an existing installation:

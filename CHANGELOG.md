@@ -4,6 +4,23 @@ Verze se řídí schématem `MAJOR.MINOR.PATCH` ([VERSIONING](VERSIONING.md)). V
 kterou máte, vypíše `yggaro-server -version`; totéž vrací `/healthz`. Jak ověřit
 stažené vydání: [release-verification](docs/release-verification.md).
 
+## [1.0.3] — 26. 9. 2026
+
+**Úplný export funguje i na instancích, kde se používají diskuse.** Ve verzi 1.0.2
+(i 1.0.1) skončil export z administrace (`POST /api/admin/export`) i z příkazové
+řádky (`-export`) chybou „export je nekompletní“, jakmile na instanci někdo otevřel
+diskusní vlákno: aplikace si ukládá osobní stav přečtení a export tento druh dat
+neměl zařazený. Export je navržený tak, aby raději odmítl celý balík, než aby tiše
+vynechal data — neúplný ZIP proto nikdy neodešel, ale export nešel stáhnout vůbec.
+
+* Stav přečtení diskusí se nově exportuje (`data/readmark.json`) a export je úplný
+  (`manifest.json` → `complete: true`).
+* Nový test hlídá, že export zná každý druh dat, který server nebo aplikace
+  zapisuje; stejná chyba se tak nemůže vrátit nepozorovaně.
+
+**Co to znamená při aktualizaci:** data ani konfigurace se nemění, stačí vyměnit
+binárku. Návrat na 1.0.2 je opět jen výměnou binárky. Postup: [upgrade](docs/upgrade.md).
+
 ## [1.0.2] — 25. 9. 2026
 
 **Serverová edice odmítne nebezpečnou konfiguraci, místo aby ji potichu přijala.**
