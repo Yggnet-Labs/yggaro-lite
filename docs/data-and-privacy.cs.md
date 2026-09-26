@@ -25,7 +25,7 @@ S nastaveným `YGGARO_DB_PASSPHRASE` — což je požadavek pro ostrý provoz �
 - **obsah příloh**, týmž klíčem;
 - **uložená tajemství**, například organizační klíč a nastavené adresy webhooků.
 
-V ukradeném souboru databáze naopak čitelné zůstávají — kvůli indexům a replikaci: identifikátory záznamů, názvy entit, cesty a metadata o zařízení a čase. Jinak řečeno: kdo má jen soubor, zjistí, *že* záznamy existují a kolik jich je. Ne co je v nich.
+V ukradeném souboru databáze naopak čitelné zůstávají — kvůli indexům a replikaci: identifikátory záznamů, názvy entit, cesty a metadata o zařízení a čase. Čitelný je i **bezpečnostní log** (přihlášení s e-mailem a IP adresou, práce se soubory včetně jejich názvů) — je řetězený otiskem, ne šifrovaný. Mimo bezpečnostní log platí: kdo má jen soubor, zjistí, *že* záznamy existují a kolik jich je. Ne co je v nich.
 
 Když klíč k datům nesedí, server **odmítne nastartovat**, místo aby přepsal data, která neumí přečíst.
 

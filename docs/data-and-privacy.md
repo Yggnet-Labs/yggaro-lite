@@ -25,7 +25,7 @@ With `YGGARO_DB_PASSPHRASE` set — the production requirement — the content i
 - **attachment contents**, with the same key;
 - **stored secrets**, such as the organisation key and configured notification webhook URLs.
 
-Readable in a stolen database file, by design, because indexing and replication need them: record identifiers, entity names, paths, device and clock metadata. In other words, a thief with only the file learns *that* records exist and how many — not what they say.
+Readable in a stolen database file, by design, because indexing and replication need them: record identifiers, entity names, paths, device and clock metadata. The **security log** is readable too — sign-ins with e-mail and IP address, work with files including their names — because it is hash-chained, not encrypted. Apart from the security log, a thief with only the file learns *that* records exist and how many — not what they say.
 
 If the key does not match the data, the server **refuses to start** rather than writing over data it cannot read.
 
