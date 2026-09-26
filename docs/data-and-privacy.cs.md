@@ -68,7 +68,7 @@ Kdyby přílohy nešly přečíst, manifest to řekne a balík označí za neúp
 
 ## Mazání dat
 
-Jednotlivé záznamy se mažou v aplikaci. Když chcete pryč všechno, smažte datový adresář, adresář klíčů a zálohy — a zničte heslo. Protože je obsah šifrovaný tím klíčem, zničením klíče a jeho kopií se stane nečitelnou i kopie, na kterou jste zapomněli.
+Jednotlivé záznamy se mažou v aplikaci. Když chcete pryč všechno, smažte datový adresář, adresář klíčů a zálohy — a zničte heslo. Protože je obsah šifrovaný tím klíčem, zničením klíče a jeho kopií se stane nečitelným i obsah kopie, na kterou jste zapomněli — kromě bezpečnostního logu, který šifrovaný není; ten je potřeba smazat ve všech kopiích.
 
 Software sám od sebe nic nemaže ani nenechává propadnout. Retence je vaše politika a váš rozvrh.
 
