@@ -30,13 +30,18 @@ obsahuje bezpečnostní log.**
   doslova, co kdo napsal do pole „e-mail“. Nově se zapíše jen délka zadaného
   textu; každý záznam má omezenou délku. Starší záznamy se nemění — export
   vyjmenuje ty, kde text e-mailem není (`security_log.typed_text_seqs`).
+* **Limit pokusů o přihlášení nejde obejít jiným zápisem téhož e-mailu** (např.
+  „ſ“ místo „s“) — počítá se podle nalezeného účtu. Chyba existovala od 1.0.0.
+* **Zápis do bezpečnostního logu ze dvou procesů najednou** (server a příkazová
+  řádka) už řetěz otisků nerozdvojí.
 * **Export z příkazové řádky serveru se zapíše do bezpečnostního logu instance.**
 * **Adresa webhooku se už nezapisuje do chyb.** Když se nepovedlo spojení
   s webhookem Teams nebo Discordu, text chyby nesl celou adresu webhooku včetně
   podpisu či tokenu — v odpovědi administraci i v bezpečnostním logu. Nově
   zůstává jen jméno serveru. Starší záznamy v logu se nemění (řetěz otisků se
   nepřepisuje) a s logem jdou i do exportu. Export je vyjmenuje
-  (`security_log.url_secret_seqs`) a README i příkazová řádka řeknou nahlas,
+  (`security_log.url_secret_seqs`; Teams Workflows, starší konektor Office 365
+  i Discord) a README i příkazová řádka řeknou nahlas,
   že je třeba webhook vyměnit.
 * **Chyby cizích služeb jdou do bezpečnostního logu zkrácené.** U odmítnutých
   volání MCP nástrojů, u SharePointu (Microsoft Graph) a u notifikací se do logu
