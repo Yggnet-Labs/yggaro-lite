@@ -7,7 +7,7 @@ The order, however, we can state — and we hold to it.
 
 ## Today — the 1.0 series
 
-56 tools (33 read, 23 write), built-in OAuth, mandates with a default expiry and immediate revocation,
+56 tools (33 read, 23 write), built-in OAuth, token mandates with a default expiry, immediate revocation,
 restriction to data classes, confirmation on six high-impact actions, a disclosure record in the
 security log. The complete list and the limits are in [tools and limits](mcp-tools.md).
 
@@ -46,7 +46,7 @@ It is not a different product but a higher tier of the same one. We promise no d
 
 ## What always holds
 
-Every new tool follows the permissions of **the user the client connects as**. Instance
-administration stays reserved to the superadministrator and is not opened over MCP: no MCP tool
-manages users, roles or instance settings. A unit test checks that every tool is classified as
+Every new tool follows the permissions of **the user the client connects as**. Administration of
+the instance (users, roles, settings) stays in the web interface, for administrators and the
+superadministrator; it is not opened over MCP: no MCP tool manages users, roles or instance settings. A unit test checks that every tool is classified as
 read or write; that classification alone does not keep administration out — the rule above does.

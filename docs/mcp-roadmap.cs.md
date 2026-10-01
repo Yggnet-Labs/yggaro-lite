@@ -7,7 +7,7 @@
 
 ## Dnes — řada 1.0
 
-56 nástrojů (33 čtení, 23 zápis), vlastní OAuth, mandáty s výchozí platností a okamžitou revokací,
+56 nástrojů (33 čtení, 23 zápis), vlastní OAuth, mandáty s tokenem s výchozí platností, okamžitá revokace,
 omezení na třídy dat, potvrzení u šesti high-impact akcí, doklad o výdeji dat v bezpečnostním
 logu. Úplný seznam i meze jsou v [nástrojích a mezích](mcp-tools.cs.md).
 
@@ -45,6 +45,7 @@ Není to tedy jiný produkt, ale vyšší stupeň téhož. Termín neslibujeme.
 ## Co platí vždy
 
 Každý nový nástroj respektuje **práva uživatele**, pod jehož účtem je klient připojen. Správa
-instance zůstává vyhrazená superadministrátorovi a přes MCP se nezpřístupní: žádný nástroj MCP
-nespravuje uživatele, role ani nastavení instance. Jednotkový test hlídá, že je každý nástroj
+instance (uživatelé, role, nastavení) zůstává ve webovém rozhraní pro administrátory
+a superadministrátora a přes MCP se nezpřístupní: žádný nástroj MCP nespravuje uživatele, role ani
+nastavení instance. Jednotkový test hlídá, že je každý nástroj
 zařazený do čtení nebo zápisu; samo zařazení správu instance nevylučuje — to dělá pravidlo výše.
