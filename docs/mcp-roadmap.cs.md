@@ -45,5 +45,6 @@ Není to tedy jiný produkt, ale vyšší stupeň téhož. Termín neslibujeme.
 ## Co platí vždy
 
 Každý nový nástroj respektuje **práva uživatele**, pod jehož účtem je klient připojen. Správa
-instance zůstává vyhrazená superadministrátorovi a přes MCP se nezpřístupní. Tohle není
-doporučení, je to vynucené v kódu — nástroj nemůže vzniknout nezařazený do čtení/zápisu.
+instance zůstává vyhrazená superadministrátorovi a přes MCP se nezpřístupní: žádný nástroj MCP
+nespravuje uživatele, role ani nastavení instance. Jednotkový test hlídá, že je každý nástroj
+zařazený do čtení nebo zápisu; samo zařazení správu instance nevylučuje — to dělá pravidlo výše.

@@ -18,6 +18,6 @@ yggaro-admin -mcp-token admin@example.com -mcp-scopes 'mcp.read'
 
 ## Operational lifecycle
 
-Every client access maps to a local principal and mandate. The default mandate is read-only, expires after 90 days (maximum 365), and can be revoked immediately by a superadmin. Application RBAC still applies. Review active mandates, their data classes and audit events regularly; revoke access on device loss, staff departure or unexpected activity.
+Every client access maps to a local principal and mandate. A token mandate is read-only by default and expires after 90 days (maximum 365); a mandate bound to a sign-in identity (OIDC binding) has no expiry in the 1.0 series and must be revoked explicitly. A superadmin can revoke any mandate immediately. Application RBAC still applies. Review active mandates, their data classes and audit events regularly; revoke access on device loss, staff departure or unexpected activity.
 
 Test after configuration: discover tools, read an allowed object, confirm a forbidden write fails, then revoke a test mandate and confirm the next call fails. See [permissions](mcp-permissions.md) and [security](security.md).

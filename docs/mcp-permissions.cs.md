@@ -13,4 +13,4 @@ Autentizace (OAuth nebo bearer token) jen určí MCP mandát. Oprávnění je pr
 
 Bezpečný výchozí stav je pouze čtení. Doménové capability udělujte jednotlivě. Pro běžné klienty nepoužívejte `all` ani `mcp.write.high`. Návrh a rozhodnutí/přijetí mají záměrně oddělená oprávnění.
 
-Tokeny se ukládají jako hash a plaintext se ukáže jednou. Mandát má výchozí platnost 90 dní, maximum 365. Smazání tokenu z klienta není revokace: odvolejte mandát na serveru a ověřte, že další volání selže. Vydání, změna tříd a revokace se bezpečnostně auditují.
+Tokeny se ukládají jako hash a plaintext se ukáže jednou. Mandát s tokenem má výchozí platnost 90 dní, maximum 365; mandát navázaný na přihlašovací identitu (OIDC) v řadě 1.0 nevyprší, proto ho pravidelně kontrolujte a odvolávejte výslovně. Smazání tokenu z klienta není revokace: odvolejte mandát na serveru a ověřte, že další volání selže. Vydání, změna tříd a revokace se bezpečnostně auditují.

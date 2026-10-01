@@ -13,12 +13,18 @@ nástrojů jmenuje oběma slovy.
 
 Tři nezávislé vrstvy, ne jedna:
 
-1. **Oprávnění (scope).** Zápis vyžaduje `mcp.write`. Klient s pouze čtecím mandátem zapisující
+1. **Oprávnění (scope).** Každý zapisující nástroj vyžaduje svou doménovou capability (například
+   `mcp.task.write`); starší obecné `mcp.write` pokrývá jen úkoly, brány a založení zakázky — viz
+   [Oprávnění](mcp-permissions.cs.md). Klient s pouze čtecím mandátem zapisující
    nástroje **vůbec neuvidí** — jsou skryté ve výpisu nástrojů, nejen odmítnuté při volání.
-2. **Potvrzení u šesti akcí.** Viz „high-impact" níže: projdou jen s potvrzením u konkrétní akce
-   (člověk v cyklu), nebo s předem schváleným rozsahem `mcp.write.high`.
+2. **Potvrzení u šesti akcí.** Viz „high-impact" níže: projdou jen s `confirm:true` u konkrétního
+   volání, nebo s předem schváleným rozsahem `mcp.write.high`. Příznak je určený k tomu, aby se
+   klient nejdřív zeptal člověka; server ověřuje příznak, ne to, že potvrdil člověk — autonomní
+   klient ho může poslat sám.
 3. **Třídy dat.** Mandát lze omezit na třídy *zakázka · dokument · adresář lidí · instance ·
-   znalosti o produktu · diskuse* (šest tříd). Nástroj mimo povolené třídy je odmítnutý i skrytý.
+   znalosti o produktu · diskuse* (šest tříd; hodnoty v nastavení `order`, `document`, `directory`,
+   `instance`, `product_knowledge`, `chat` — neznámá hodnota se neodmítne, jen nic nepovolí).
+   Nástroj mimo povolené třídy je odmítnutý i skrytý.
    Ke které třídě nástroj patří, říkají nadpisy níže.
 
 Navíc: rozsah přístupu je vždy dán právy **uživatele, pod jehož účtem je klient připojen** —
@@ -26,9 +32,12 @@ Navíc: rozsah přístupu je vždy dán právy **uživatele, pod jehož účtem 
 server zapíše do bezpečnostního logu doklad o výdeji dat (nástroj, třída, počet objektů, počet
 bajtů, otisk — obsah ne). Odmítnutí kvůli třídě dat mimo mandát, chybějícímu potvrzení nebo
 chybě nástroje se zapíše jako odmítnutí; odmítnutí kvůli chybějícímu rozsahu nebo limitu volání,
-výpis nástrojů a další protokolové zprávy záznam nevytvářejí. Zápis do logu výsledek volání neblokuje: když se nepodaří,
+výpis nástrojů a další protokolové zprávy záznam nevytvářejí (jedna výjimka: se zapnutým
+vestavěným OAuth se čtení odmítnuté kvůli chybějícímu `mcp.read` zapíše jako odmítnutí). Zápis do logu výsledek volání neblokuje: když se nepodaří,
 volání se nezastaví a chyba skončí jen v diagnostice serveru. Každý zápis dat je v auditu změn
-s identifikátorem mandátu.
+pod uživatelem, jehož účtem vznikl. V řadě 1.0 ani audit změn, ani doklad o výdeji neříká, který
+mandát (klient) zapisoval — pokud potřebujete klienty rozlišit, připojte každý pod vlastním
+uživatelem.
 
 ## Čtení (33)
 
@@ -54,8 +63,9 @@ s identifikátorem mandátu.
 **Diskuse:** `create_thread` · `post_message` · `edit_message` · `delete_message` ⚠ ·
 `toggle_reaction` · `resolve_thread` ⚠
 
-⚠ = **high-impact** (6 akcí): mazání, blokující přechod brány, rozhodnutí a převzetí výstupu.
-Vyžadují potvrzení u konkrétní akce, nebo předschválený rozsah `mcp.write.high`.
+⚠ = **high-impact** (6 akcí): mazání, blokující přechod brány, rozhodnutí, převzetí výstupu
+a uzavření nebo znovuotevření diskusního vlákna. Vyžadují `confirm:true` u konkrétního volání, nebo
+předschválený rozsah `mcp.write.high` (server ověřuje příznak, ne člověka — viz výše).
 
 ## Co vydání řady 1.0 NEUMÍ
 

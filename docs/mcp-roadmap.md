@@ -47,6 +47,6 @@ It is not a different product but a higher tier of the same one. We promise no d
 ## What always holds
 
 Every new tool follows the permissions of **the user the client connects as**. Instance
-administration stays reserved to the superadministrator and is not opened over MCP. This is not
-a recommendation; it is enforced in code — a tool cannot come into being unclassified as read or
-write.
+administration stays reserved to the superadministrator and is not opened over MCP: no MCP tool
+manages users, roles or instance settings. A unit test checks that every tool is classified as
+read or write; that classification alone does not keep administration out — the rule above does.

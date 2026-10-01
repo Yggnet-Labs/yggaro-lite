@@ -13,22 +13,30 @@ the tool names refer to by both words.
 
 Three independent layers, not one:
 
-1. **Scope.** Writing requires `mcp.write`. A client holding a read-only mandate **does not even
+1. **Scope.** Each writing tool requires its own domain capability (for example `mcp.task.write`);
+   the older broad `mcp.write` covers only tasks, gates and creating an order — see
+   [Permissions](mcp-permissions.md). A client holding a read-only mandate **does not even
    see** the writing tools — they are hidden from the tool listing, not merely refused on call.
-2. **Confirmation on six actions.** See "high-impact" below: they pass only with per-action
-   confirmation (a human in the loop) or with the pre-approved `mcp.write.high` scope.
+2. **Confirmation on six actions.** See "high-impact" below: they pass only with `confirm:true` on
+   that specific call or with the pre-approved `mcp.write.high` scope. The flag is meant for the
+   client to ask a human first; the server checks the flag, not that a human confirmed — an
+   autonomous client can send it on its own.
 3. **Data classes.** A mandate can be restricted to *order · document · directory · instance ·
-   product knowledge · discussion* (six classes). A tool outside the permitted classes is both
-   refused and hidden. The headings below say which class each tool belongs to.
+   product knowledge · discussion* (six classes; configuration values `order`, `document`,
+   `directory`, `instance`, `product_knowledge`, `chat` — an unknown value is not rejected, it
+   simply matches nothing). A tool outside the permitted classes is both refused and hidden. The headings below say which class each tool belongs to.
 
 Beyond that, access always follows the permissions of **the user the client connects as** —
 there is no separate "AI account" with rights of its own. After a successful tool call
 (`tools/call`) the server writes a disclosure record to the security log (tool, class, object count,
 byte count, hash — never the content). A refusal because of a data class outside the mandate, a missing
 confirmation or a tool error is written as a denial; a refusal because of a missing scope or the call
-rate limit, listing tools and other protocol messages create no record. Writing to the log does not gate the call: if it fails,
+rate limit, listing tools and other protocol messages create no record (one exception: with the
+built-in OAuth enabled, a read refused for a missing `mcp.read` is recorded as a denial). Writing to the log does not gate the call: if it fails,
 the call still goes through and the error only reaches the server diagnostics. Every data write
-lands in the change audit together with the mandate identifier.
+lands in the change audit under the user it was made as. In the 1.0 series neither the change
+audit nor the disclosure record says which mandate (client) made it — if you need to tell clients
+apart, connect each client as its own user.
 
 ## Read (33)
 
@@ -54,8 +62,9 @@ lands in the change audit together with the mandate identifier.
 **Discussion:** `create_thread` · `post_message` · `edit_message` · `delete_message` ⚠ ·
 `toggle_reaction` · `resolve_thread` ⚠
 
-⚠ = **high-impact** (6 actions): deletions, a blocking gate transition, decisions and accepting a
-deliverable. They require per-action confirmation or the pre-approved `mcp.write.high` scope.
+⚠ = **high-impact** (6 actions): deletions, a blocking gate transition, decisions, accepting a
+deliverable and closing or reopening a discussion thread. They require `confirm:true` on the call
+or the pre-approved `mcp.write.high` scope (the server checks the flag, not the human — see above).
 
 ## What the 1.0 releases do NOT do
 

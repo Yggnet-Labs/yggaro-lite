@@ -16,4 +16,4 @@ yggaro-admin -mcp-token admin@example.cz -mcp-scopes 'mcp.read'
 
 `yggaro-admin` spustí příkaz pod účtem služby ([instalace, krok 6](install.cs.md#6-údržbové-příkazy-pod-účtem-služby)). Token se ukáže jen jednou. Uložte ho do úložiště tajemství AI klienta, nikdy do Gitu nebo chatu. Klient potřebuje MCP URL a `Authorization: Bearer <token>`. Začněte read-only a před nástroji si nechte vypsat capability.
 
-Každý přístup se mapuje na místního uživatele a mandát. Výchozí mandát je read-only, platí 90 dní (maximum 365) a superadmin ho může okamžitě odvolat. RBAC aplikace platí dál. Po nastavení ověřte povolené čtení, odmítnutý zápis a skutečnou revokaci. Viz [oprávnění](mcp-permissions.cs.md).
+Každý přístup se mapuje na místního uživatele a mandát. Mandát s tokenem je ve výchozím stavu jen pro čtení a platí 90 dní (maximum 365); mandát navázaný na přihlašovací identitu (OIDC) v řadě 1.0 nevyprší a je potřeba ho odvolat výslovně. Superadmin může kterýkoli mandát okamžitě odvolat. RBAC aplikace platí dál. Po nastavení ověřte povolené čtení, odmítnutý zápis a skutečnou revokaci. Viz [oprávnění](mcp-permissions.cs.md).

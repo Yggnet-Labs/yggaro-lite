@@ -13,4 +13,4 @@ Authentication (OAuth or bearer token) only identifies an MCP mandate. Authorisa
 
 Read-only is the safe default. Grant domain capabilities individually. Do not use `all` or `mcp.write.high` for routine clients. Creating/proposing and deciding/accepting are deliberately separate capabilities; a client allowed to propose a decision need not be allowed to decide it.
 
-Tokens are stored as hashes and plaintext is returned once. Mandates default to 90 days and are capped at 365. Deleting a token from the client is not revocation: revoke the mandate server-side and confirm a subsequent call fails. Superadmin issuance, class changes and revocation are security-audited.
+Tokens are stored as hashes and plaintext is returned once. Token mandates default to 90 days and are capped at 365; a mandate bound to a sign-in identity (OIDC binding) has no expiry in the 1.0 series, so review and revoke it explicitly. Deleting a token from the client is not revocation: revoke the mandate server-side and confirm a subsequent call fails. Superadmin issuance, class changes and revocation are security-audited.
