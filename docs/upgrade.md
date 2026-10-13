@@ -1,126 +1,88 @@
-# Upgrade
+# Upgrade to 1.0.5
 
-Read release notes and `CHANGELOG.md`; back up and verify restore first.
+[English](upgrade.md) · [Čeština](upgrade.cs.md)
+
+For the self-hosted server edition running as **root**, as set up by the installation guide of versions 1.0.0–1.0.3 (binary in `/opt/yggaro/yggaro-server`, data in `/var/lib/yggaro`, keys in `/var/lib/yggaro-keys`, service `yggaro-server`). It applies to 1.0.3, the last public release, and to 1.0.4. 1.0.4 was a maintenance build for hosted instances only and was never published; if you run it, the steps are the same.
+
+## What was and was not tested
+
+* **Tested:** a clean installation of 1.0.5 on Ubuntu 24.04 (non-root service, automatic HTTPS certificate), and an upgrade of a **1.0.1 test installation** (a 1.0.1 server rebuilt from its source for the test, not the originally published binary) to 1.0.5 with the installation kit of that test.
+* **Not tested:** upgrading a production instance from 1.0.3 or 1.0.4 with the steps below, restoring a backup with the rollback commands on a real instance, and running an older binary on data that 1.0.5 has already written (that is why the rollback never does it). The upgrade block and the rollback sequence were run only against stand-in commands in a scratch directory (10 upgrade cases: success, wrong checksum, missing checksum line, wrong version, failed stop, failed start, and four wrong answers from the health check; the rollback sequence is checked for restored files, kept `*.failed-1.0.5` copies, command order and failure when the backup is incomplete) to check that they stop at the first failure and restore the expected files. The steps are the standard procedure of earlier releases, applied to 1.0.5. Compared with 1.0.3, the source adds no database tables or columns, but treat the upgrade as one-way and keep your backup.
+
+## Before you start
+
+1. Read the [release notes](https://github.com/Yggnet-Labs/yggaro-lite/releases) for 1.0.5, including the known limitations.
+2. Schedule a short outage and tell your users.
+3. Take and check a backup — this is not optional. Follow [backup and restore](backup-restore.md): database snapshot (`-backup`), the `files` directory, the `yggaro-keys` directory and your **passphrase stored off the server**. Restore it into an isolated directory and run `-verify-restore` on it. Copy the backup off the machine.
+
+## Upgrade
+
+Download `yggaro-server-linux-amd64` and `SHA256SUMS` from the 1.0.5 GitHub release into an empty directory on the server, then run this **whole block as root in one go**. It stops at the first problem and never touches the running service before the download has been verified.
 
 ```bash
-bash -euo pipefail <<'STEP'
-grep '  yggaro-server-linux-amd64$' SHA256SUMS | sha256sum -c -
+bash -euo pipefail <<'UPGRADE'
+YGG=/opt/yggaro            # where your install keeps the binary
+SVC=yggaro-server          # your systemd service name
+URL=https://lite.example.com/healthz   # your instance
+
+# 1. Verify BEFORE touching the service
+grep ' yggaro-server-linux-amd64$' SHA256SUMS | sha256sum -c -
+chmod +x yggaro-server-linux-amd64
+./yggaro-server-linux-amd64 -version | grep -q '^Yggaro Lite Server 1.0.5 (2ce7da1,' \
+  || { echo "ABORT: unexpected version, nothing was changed"; exit 1; }
+
+# 2. Swap (any failing step aborts; the previous binary stays as .previous)
+systemctl stop "$SVC" || { echo "ABORT: service did not stop, nothing was replaced"; exit 1; }
+cp -p "$YGG/yggaro-server" "$YGG/yggaro-server.previous"
+install -m 755 yggaro-server-linux-amd64 "$YGG/yggaro-server.new"
+mv "$YGG/yggaro-server.new" "$YGG/yggaro-server"
+systemctl start "$SVC" \
+  || { echo "START FAILED: the new binary is installed and a start was attempted - follow 'Rolling back' below"; exit 1; }
+
+# 3. Check
+sleep 5
+curl -fsS "$URL" | python3 -c 'import sys,json;d=json.load(sys.stdin);sys.exit(0 if (d.get("status"),d.get("version"),d.get("commit"))==("ok","1.0.5","2ce7da1") else 1)' \
+  || { echo "CHECK FAILED: the new binary has now been started - follow 'Rolling back' below"; exit 1; }
+echo "UPGRADE OK"
+UPGRADE
+```
+
+The block compares the binary with the line for it in `SHA256SUMS`; a missing line or a mismatch aborts. `SHA256SUMS` proves integrity only: like 1.0.0–1.0.3, 1.0.5 is not cryptographically signed, so also compare the SHA-256 of the binary (`sha256sum yggaro-server-linux-amd64`) with the value in the release notes (`fd943def65417fa4480df345406652690898a27bcf63387b300fec30e39d86a8`) and take both from the release page itself.
+
+Afterwards check `journalctl -u yggaro-server --since '10 minutes ago'`, sign in as an administrator, confirm your data is present, that you can read and save a record, and that two-factor sign-in still works.
+
+Keep your existing service file. Version 1.0.5 does not require changes to it; the non-root service hardening described in the new installation guide is a separate migration, not part of this upgrade.
+
+## What changes after the upgrade
+
+* Administrators get a security panel listing sessions, MCP mandates and OAuth token families, with explicit revocation. Switching on mandatory two-factor authentication does not by itself end existing access — revoke what you want to end.
+* Enabling and changing two-factor authentication are recorded as separate events in the security log; users can see their own events.
+* A security setting saved for the first time on an instance takes effect immediately.
+* The MCP tool set is unchanged from 1.0.3. Known limitation: the `mcp.dependency.write` capability is reserved and has no tool in 1.0.5 (see release notes).
+
+## Rolling back
+
+Which procedure applies depends on one fact: **has the new binary ever been started?**
+
+* **The block aborted before `systemctl start`** (checksum, version or stop failed, or the swap itself failed): the new binary never ran, so it wrote nothing to your application data (the stop, copy and swap steps themselves are the only changes). If the service is stopped, start it again; if `yggaro-server.previous` exists and `yggaro-server` is incomplete, copy `.previous` back over it first.
+* **The new binary was started, even briefly** (including "CHECK FAILED"): it may already have written to your data, with or without users signed in. Do **not** run the old binary on the current data. Restore the pre-upgrade backup together with the previous binary:
+
+```bash
+set -euo pipefail
 systemctl stop yggaro-server
-cp -p /opt/yggaro/yggaro-server /opt/yggaro/yggaro-server.previous
-install -m 755 yggaro-server-linux-amd64 /opt/yggaro/yggaro-server
-/opt/yggaro/yggaro-server -version
-systemctl start yggaro-server
-timeout 90 bash -c 'until curl -fsS https://lite.example.com/healthz; do sleep 3; done'
-STEP
-```
-
-The block stops at the first failure: with a checksum that does not match, the running service is not even stopped. To see what the service did after the start (for example when the block stopped on the health check), read its log:
-
-```bash
-journalctl -u yggaro-server --since '10 minutes ago'
-```
-
-Confirm the version, login and a representative read/write path. If smoke checks fail, restore the previous binary. Do not put an older database over a migrated database unless release notes explicitly allow it; use the pre-upgrade backup.
-
-## From 1.0.2 to 1.0.3
-
-1.0.3 fixes the full export on instances where discussions are used: it no longer fails with "export is incomplete" because someone opened a discussion thread. The export now also contains the whole security log (`data/_security_log.json`, hash-chained), and a failed connection to a Teams or Discord webhook no longer writes the webhook URL into the error text. No data migration, no new configuration. Replace the binary with the block above; rolling back to 1.0.2 is the same binary swap.
-
-Two things to check after the update:
-
-- **The full export now also requires the `audit.view` right**, because the package carries the security log. An administrator who has `data.export.full` but whose `audit.view` was removed gets `403` until it is granted back.
-- **If a notification webhook ever failed to connect on 1.0.2 or earlier**, its full address — including the signature or token — may already be in the security log. The export lists such entries and says so; replace the webhook in Teams or Discord.
-
-## From 1.0.0 or 1.0.1 to 1.0.2
-
-1.0.2 changes two things that affect an existing installation:
-
-1. **The server stops running as root.** Earlier versions of the [install guide](install.md) started the service as root. From 1.0.2 it runs under its own account `yggaro`, and maintenance commands go through `yggaro-admin`.
-2. **The server refuses unsafe configuration instead of accepting it.** Without `YGGARO_DB_PASSPHRASE` it does not start, and on an empty database it does not start without `YGGARO_BOOTSTRAP_TOKEN` either. An instance that already has its first administrator does not need the token.
-
-### First, find out how your instance is protected
-
-```bash
-grep -c '^YGGARO_DB_PASSPHRASE=.' /etc/yggaro-server.env
-ls -l /var/lib/yggaro-keys
-```
-
-- `1` — the instance uses a passphrase, as the install guide recommends. Continue below.
-- `0` and a `*.key` file in `/var/lib/yggaro-keys` — the instance was created **without a passphrase** and its data is encrypted with that key file. **Do not add a passphrase:** it would produce a different key and the data would not open. Instead add `YGGARO_ALLOW_LOCAL_KEY=1` to `/etc/yggaro-server.env`. That is an explicit acknowledgement that the key lives on the same machine as the data; back up the key directory separately. The server only ever *reads* that existing key — it never creates a new one or overwrites a damaged one.
-
-### Back up the old installation first
-
-The procedure in [backup and restore](backup-restore.md) already assumes the `yggaro` account and the `yggaro-admin` helper, which do not exist yet. Back up the old root installation with its own binary, as root, while it still runs — and prove the copy opens:
-
-```bash
-bash -euo pipefail <<'STEP'
-B=/srv/backup/pre-1.0.2
-install -d -m 700 "$B"
-/opt/yggaro/yggaro-server -data /var/lib/yggaro -backup "$B/yggaro.db"
-if [ -d /var/lib/yggaro/files ]; then tar -C /var/lib/yggaro -czf "$B/files.tgz" files; fi
-if [ -d /var/lib/yggaro-keys ]; then tar -C /var/lib -czf "$B/yggaro-keys.tgz" yggaro-keys; fi
-cp -p /etc/yggaro-server.env "$B/yggaro-server.env"
-cp -p /opt/yggaro/yggaro-server "$B/yggaro-server.previous"
-cp -p /etc/systemd/system/yggaro-server.service "$B/yggaro-server.service.previous"
-R=$(mktemp -d)
-trap 'rm -rf "$R"' EXIT
-install -m 600 "$B/yggaro.db" "$R/yggaro.db"
-if [ -d /var/lib/yggaro-keys ]; then cp -a /var/lib/yggaro-keys "$R/keys"; else mkdir "$R/keys"; fi
-( set -a; . /etc/yggaro-server.env; set +a
-  YGGARO_KEYS="$R/keys" /opt/yggaro/yggaro-server -data "$R" -verify-restore )
-STEP
-```
-
-It must end with `✓ Databáze se otevřela a je čitelná.` On an installation **without** a passphrase the old binary also prints a warning to set `YGGARO_DB_PASSPHRASE`; ignore it here — for such an installation 1.0.2 is confirmed with `YGGARO_ALLOW_LOCAL_KEY=1`, and adding a passphrase would make the existing data unreadable (see above). The drill runs on a copy, with a copy of the key directory, so it cannot change the live instance. `$B` now holds the database snapshot, attachments, key directory, environment file, binary and unit — **copy it off the machine**; the environment file contains the passphrase.
-
-### Migration
-
-```bash
-bash -euo pipefail <<'STEP'
-grep '  yggaro-server-linux-amd64$' SHA256SUMS | sha256sum -c -
-test -s /srv/backup/pre-1.0.2/yggaro.db
-systemctl stop yggaro-server
-cp -p /opt/yggaro/yggaro-server /opt/yggaro/yggaro-server.previous
-id -u yggaro >/dev/null 2>&1 || useradd --system --home-dir /var/lib/yggaro --no-create-home --shell /usr/sbin/nologin yggaro
-install -d -m 700 /var/lib/yggaro-keys
-chown -R yggaro:yggaro /var/lib/yggaro /var/lib/yggaro-keys
-chmod 700 /var/lib/yggaro /var/lib/yggaro-keys
-install -m 755 yggaro-server-linux-amd64 /opt/yggaro/yggaro-server
-/opt/yggaro/yggaro-server -version
-STEP
-```
-
-The block stops before touching the running service when the checksum does not match or the backup from the previous step is missing.
-
-Replace `/etc/systemd/system/yggaro-server.service` with the unit from [install, step 4](install.md#4-systemd-service), keeping your own `-domain` and `-acme-email`. Install the `yggaro-admin` helper from [step 6](install.md#6-maintenance-commands-run-as-the-service-account). Then:
-
-```bash
-bash -euo pipefail <<'STEP'
-systemctl daemon-reload
-systemctl start yggaro-server
-timeout 90 bash -c 'until curl -fsS https://lite.example.com/healthz; do sleep 3; done'
-systemctl status yggaro-server --no-pager
-ps -o user=,pid=,args= -C yggaro-server
-R=$(mktemp -d /var/lib/yggaro-restore-check.XXXXXX)
-trap 'rm -rf -- "$R"' EXIT
-chown yggaro:yggaro "$R"
-yggaro-admin -backup "$R/yggaro.db"
-yggaro-admin -data "$R" -verify-restore
-STEP
-```
-
-The restore check above reads a fresh snapshot, not the running database; it checks database readability, not attachments or business completeness. Its temporary directory is removed on success or failure. `ps` must show `yggaro`. If the service ends in `failed`, `journalctl -u yggaro-server -n 20` states the reason in one message and systemd does not keep restarting it (exit code `78`); see [troubleshooting](troubleshooting.md#the-server-will-not-start).
-
-### Rollback
-
-Keep the new unit and file ownership; only put the previous binary back:
-
-```bash
-systemctl stop yggaro-server
+mv /var/lib/yggaro /var/lib/yggaro.failed-1.0.5          # keep, do not delete
+mv /var/lib/yggaro-keys /var/lib/yggaro-keys.failed-1.0.5
+install -d -m 700 /var/lib/yggaro /var/lib/yggaro-keys
+install -m 600 /srv/backup/yggaro.db /var/lib/yggaro/yggaro.db
+tar -C /var/lib/yggaro -xzf /srv/backup/files.tgz
+tar -C /var/lib -xzf /srv/backup/yggaro-keys.tgz
 install -m 755 /opt/yggaro/yggaro-server.previous /opt/yggaro/yggaro-server
+set -a; . /etc/yggaro-server.env; set +a
+YGGARO_KEYS=/var/lib/yggaro-keys /opt/yggaro/yggaro-server -data /var/lib/yggaro -verify-restore
 systemctl start yggaro-server
+curl -fsS https://lite.example.com/healthz
 ```
 
-If the data itself is damaged, restore from `/srv/backup/pre-1.0.2` as described in [backup and restore](backup-restore.md), under the unit that was in place when the backup was taken.
+Use the paths where you stored the backup. After this, `/healthz` must report the previous version again. Work done after the upgrade is lost; the `*.failed-1.0.5` directories keep it for inspection. Do not put an older database over a migrated one unless the release notes say it is allowed.
 
-1.0.1 runs under the `yggaro` account and the same unit, and reads data written by 1.0.2 — 1.0.2 does not change the data format. It ignores `YGGARO_ALLOW_LOCAL_KEY`, which is harmless. Going back to the old root unit is not recommended: files the service creates as root would have to be handed back to `yggaro` by hand before the next upgrade.
+If something does not match this guide, stop and ask us (security matters: the contact in `SECURITY.md`) — do not improvise on production data.

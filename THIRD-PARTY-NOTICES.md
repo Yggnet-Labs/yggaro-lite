@@ -25,12 +25,12 @@ binary (`go version -m`), not from `go.mod`.
 | `github.com/segmentio/encoding` | v0.5.4 | MIT |
 | `github.com/skip2/go-qrcode` | v0.0.0-20200617195104-da1b6568686e | MIT |
 | `github.com/yosida95/uritemplate/v3` | v3.0.2 | BSD-3-Clause |
-| `golang.org/x/crypto` | v0.53.0 | BSD-3-Clause |
-| `golang.org/x/net` | v0.55.0 | BSD-3-Clause |
+| `golang.org/x/crypto` | v0.57.0 | BSD-3-Clause |
+| `golang.org/x/net` | v0.60.0 | BSD-3-Clause |
 | `golang.org/x/oauth2` | v0.36.0 | BSD-3-Clause |
-| `golang.org/x/sync` | v0.21.0 | BSD-3-Clause |
-| `golang.org/x/sys` | v0.46.0 | BSD-3-Clause |
-| `golang.org/x/text` | v0.39.0 | BSD-3-Clause |
+| `golang.org/x/sync` | v0.23.0 | BSD-3-Clause |
+| `golang.org/x/sys` | v0.48.0 | BSD-3-Clause |
+| `golang.org/x/text` | v0.42.0 | BSD-3-Clause |
 | `golang.org/x/time` | v0.15.0 | BSD-3-Clause |
 | `modernc.org/libc` | v1.72.3 | BSD-2-Clause |
 | `modernc.org/mathutil` | v1.7.1 | BSD-2-Clause |
@@ -1390,7 +1390,7 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
-## golang.org/x/crypto v0.53.0
+## golang.org/x/crypto v0.57.0
 
 Licence: BSD-3-Clause
 
@@ -1428,7 +1428,7 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
-## golang.org/x/net v0.55.0
+## golang.org/x/net v0.60.0
 
 Licence: BSD-3-Clause
 
@@ -1504,7 +1504,7 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
-## golang.org/x/sync v0.21.0
+## golang.org/x/sync v0.23.0
 
 Licence: BSD-3-Clause
 
@@ -1542,7 +1542,7 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
-## golang.org/x/sys v0.46.0
+## golang.org/x/sys v0.48.0
 
 Licence: BSD-3-Clause
 
@@ -1580,7 +1580,7 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
-## golang.org/x/text v0.39.0
+## golang.org/x/text v0.42.0
 
 Licence: BSD-3-Clause
 

@@ -4,6 +4,21 @@ Verze se řídí schématem `MAJOR.MINOR.PATCH` ([VERSIONING](VERSIONING.md)). V
 kterou máte, vypíše `yggaro-server -version`; totéž vrací `/healthz`. Jak ověřit
 stažené vydání: [release-verification](docs/release-verification.md).
 
+## [1.0.5]
+
+* **Bezpečnostní aktualizace.** Go 1.26.9 a `golang.org/x/net` v0.60.0 přinášejí opravy HTTP/2; související moduly a přehled knihoven odpovídají vydání.
+* **Přehled a odvolání přístupů.** Administrátor může zobrazit a jednotlivě odvolat relace, MCP mandáty a rodiny OAuth tokenů, včetně vlastního přístupu. Zapnutí povinného dvoufaktorového ověřování samo dosavadní přístupy neukončuje.
+* **Audit dvoufaktorového ověřování.** Zapnutí a změna se zaznamenávají jako samostatné události. Při selhání zápisu změna proběhne a odpověď upozorní na chybějící záznam; e-mailové oznámení zatím není dostupné.
+* **Nastavení bezpečnosti a objednávky.** Bezpečnostní nastavení se uplatní už při prvním uložení. Změny polí nové objednávky se přijímají až po jejím vytvoření, což odstraňuje souběh vedoucí k částečné objednávce. Patička serverové edice popisuje uložení dat na této instanci.
+* **Známá mez MCP.** `mcp.dependency.write` je v 1.0.5 rezervovaná schopnost bez nástroje. `create_risk(kind=dependency)` vyžaduje `mcp.risk.write`; samotný dependency mandát nestačí. Oprava je plánována pro 1.0.6. Sada MCP nástrojů je stejná jako v 1.0.3.
+* **GO-2026-5932.** Databáze zranitelností uvádí nepodporovaný balíček `golang.org/x/crypto/openpgp`, nikoli konkrétní zneužitelnou chybu; opravená verze neexistuje. Binární sken jej stále hlásí na úrovni modulu. V přesném vydaném sestavení nejsou tento balíček ani jeho funkce součástí závislostí či spustitelného souboru; nesouvisející DNS typ OPENPGPKEY v DNS knihovně existuje. Nebyla nalezena cesta volání z HTTP ani MCP. Nejde o tvrzení, že software nemá zranitelnosti.
+
+Podrobnosti, piny, známé meze a rozsah vyzkoušených instalací a upgradů jsou v [poznámkách k vydání](docs/release-notes/1.0.5.cs.md). Vydání není kryptograficky podepsané; kontrolní součty ověřují shodu bajtů, nikoli původ.
+
+## [1.0.4]
+
+Opravná verze používaná pouze na hostovaných instancích; veřejně nebyla vydána. Pro existující instalace postupujte podle [návodu k upgradu](docs/upgrade.cs.md).
+
 ## [1.0.3] — 26. 9. 2026
 
 **Úplný export funguje i na instancích, kde se používají diskuse, a nově

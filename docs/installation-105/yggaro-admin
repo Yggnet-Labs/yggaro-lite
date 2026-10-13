@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eu
+exec systemd-run --quiet --wait --pipe --collect \
+ --uid=yggaro --gid=yggaro -p UMask=0077 \
+ -p EnvironmentFile=/etc/yggaro-server.env \
+ -p Environment=YGGARO_KEYS=/var/lib/yggaro-keys \
+ /opt/yggaro/yggaro-server -data /var/lib/yggaro "$@"

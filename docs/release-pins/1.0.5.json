@@ -1,0 +1,52 @@
+{
+  "format": "YGGARO-LITE-PUBLIC-RELEASE-PINS-v1",
+  "version": "1.0.5",
+  "source_commit": "2ce7da1321cc93b26404e1175149319304ee60cb",
+  "public_documentation_ref": "v1.0.5",
+  "binary_sha256": "fd943def65417fa4480df345406652690898a27bcf63387b300fec30e39d86a8",
+  "sbom_sha256": "e5ef03f1a5f1ef51da89e5ff36f87f71b41593d549499946fe4037d9f3b798da",
+  "sha256sums_sha256": "50d979f634f49536aeca10d16a9e7193a2aa59889eecad1bda8744cdc06e4e6c",
+  "unsigned": true,
+  "files": [
+    {
+      "name": "LICENSE",
+      "size": 3750,
+      "sha256": "5f928c68872b3d6d7a0f500747f2dd4efd21ef8e6cf514644e86eba72c54a7d0"
+    },
+    {
+      "name": "NOTICE",
+      "size": 776,
+      "sha256": "6d6d53f1e80547521cb81d19b4096f0c7f4bc38b91e7ee269829c65eb8523f7d"
+    },
+    {
+      "name": "PROVENANCE.json",
+      "size": 196,
+      "sha256": "57b8130a295b0178f58d773fe2baa668c49441f4b6ed1f9ff653cb3157821e77"
+    },
+    {
+      "name": "SBOM.cdx.json",
+      "size": 30040,
+      "sha256": "e5ef03f1a5f1ef51da89e5ff36f87f71b41593d549499946fe4037d9f3b798da"
+    },
+    {
+      "name": "SHA256SUMS",
+      "size": 568,
+      "sha256": "50d979f634f49536aeca10d16a9e7193a2aa59889eecad1bda8744cdc06e4e6c"
+    },
+    {
+      "name": "THIRD-PARTY-NOTICES.md",
+      "size": 184705,
+      "sha256": "b8dbf5a1be793b237a6fa69f5b08e4cefc3042e4061edda626221e307bc460d6"
+    },
+    {
+      "name": "VERSION.txt",
+      "size": 275,
+      "sha256": "dc37ed3bdcd2ab689dab149eabf3e9578133480cd5857f31bf543cfa9ac948ab"
+    },
+    {
+      "name": "yggaro-server-linux-amd64",
+      "size": 47132834,
+      "sha256": "fd943def65417fa4480df345406652690898a27bcf63387b300fec30e39d86a8"
+    }
+  ]
+}
